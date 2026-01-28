@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="prompt">
+
+    <resultMap id="promptResult" type="map">
+        <result property="id" column="id"/>
+        <result property="slug" column="slug"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="template" column="template"/>
+        <result property="body" column="body"/>
+        <result property="systemPrompt" column="system_prompt"/>
+        <result property="taskType" column="task_type"/>
+        <result property="stateId" column="state_id"/>
+        <result property="flowId" column="flow_id"/>
+        <result property="validationScore" column="validation_score"/>
+        <result property="lastValidatedAt" column="last_validated_at"/>
+        <result property="semanticVersion" column="semantic_version"/>
+        <result property="parentVersionId" column="parent_version_id"/>
+        <result property="changelog" column="changelog"/>
+        <result property="recommendedModel" column="recommended_model"/>
+        <result property="userId" column="user_id"/>
+        <result property="authorUsername" column="author_username"/>
+        <result property="usageCount" column="usage_count"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="score" column="score"/>
+        <result property="acceptedAnswerId" column="accepted_answer_id"/>
+        <result property="answerCount" column="answer_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="duplicateOfPromptId" column="duplicate_of_prompt_id"/>
+        <result property="closeReason" column="close_reason"/>
+        <result property="closedAt" column="closed_at"/>
+        <result property="closedByUserId" column="closed_by_user_id"/>
+        <result property="revisionNumber" column="revision_number"/>
+        <result property="isFeatured" column="is_featured"/>
+        <result property="forkedFromPromptId" column="forked_from_prompt_id"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="creatorRole" column="creator_role"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="lastModifiedTime" column="last_modified_time"/>
+        <result property="lastModifiedBy" column="last_modified_by"/>
+        <result property="tenant" column="tenant"/>
+        <result property="createdBy" column="createdBy"/>
+        <result property="version" column="version"/>
+        <result property="tags" column="tags_str"/>
+        <result property="authorFullName" column="author_full_name"/>
+        <result property="authorPictureUrl" column="author_picture_url"/>
+    </resultMap>
+
+    <resultMap id="answerResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="authorUsername" column="author_username"/>
+        <result property="body" column="body"/>
+        <result property="score" column="score"/>
+        <result property="isAccepted" column="is_accepted"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="revisionNumber" column="revision_number"/>
+    </resultMap>
+
+    <resultMap id="commentResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="author" column="author"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="revisionResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="revisionNumber" column="revision_number"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
+        <result property="changeComment" column="change_comment"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="variableResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="description" column="description"/>
+        <result property="required" column="required"/>
+        <result property="defaultValue" column="default_value"/>
+        <result property="example" column="example"/>
+    </resultMap>
+
+    <resultMap id="categoryResult" type="map">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="slug" column="slug"/>
+        <result property="icon" column="icon"/>
+        <result property="color" column="color"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <resultMap id="activityResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="activitySuccess" column="activity_success"/>
+        <result property="activityComment" column="activity_comment"/>
+        <result property="createdTime" column="created_time"/>
+    </resultMap>
+
+    <resultMap id="favoriteResult" type="map">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="addedAt" column="added_at"/>
+        <result property="notes" column="notes"/>
+    </resultMap>
+
+    <resultMap id="flagResult" type="map">
+        <result property="id" column="id"/>
+        <result property="entityType" column="entity_type"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="reason" column="reason"/>
+        <result property="details" column="details"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="bountyResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="sponsorUserId" column="sponsor_user_id"/>
+        <result property="amount" column="amount"/>
+        <result property="description" column="description"/>
+        <result property="startedAt" column="started_at"/>
+        <result property="expiresAt" column="expires_at"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <resultMap id="attachmentResult" type="map">
+        <result property="id" column="id"/>
+        <result property="url" column="url"/>
+        <result property="caption" column="caption"/>
+        <result property="mimeType" column="mime_type"/>
+        <result property="entityType" column="entity_type"/>
+        <result property="entityId" column="entity_id"/>
+    </resultMap>
+
+    <resultMap id="notificationResult" type="map">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="message" column="message"/>
+        <result property="relatedEntityType" column="related_entity_type"/>
+        <result property="relatedEntityId" column="related_entity_id"/>
+        <result property="isRead" column="is_read"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="modelCompatibilityResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="status" column="status"/>
+        <result property="testedAt" column="tested_at"/>
+        <result property="testPassRate" column="test_pass_rate"/>
+        <result property="notes" column="notes"/>
+    </resultMap>
+
+    <resultMap id="testCaseResult" type="map">
+        <result property="id" column="id"/>
+        <result property="promptId" column="prompt_id"/>
+        <result property="inputValues" column="input_values"/>
+        <result property="expectedOutput" column="expected_output"/>
+    </resultMap>
+
+    <resultMap id="testRunResult" type="map">
+        <result property="id" column="id"/>
+        <result property="testCaseId" column="test_case_id"/>
+        <result property="modelId" column="model_id"/>
+        <result property="timestamp" column="timestamp"/>
+        <result property="output" column="output"/>
+        <result property="passed" column="passed"/>
+        <result property="executionTimeMs" column="execution_time_ms"/>
+        <result property="tokensUsed" column="tokens_used"/>
+    </resultMap>
+
+    <!-- Query Criteria -->
+    <sql id="searchCriteria">
+        <where>
+            <if test="search != null">
+                AND (title LIKE CONCAT('%', #{search}, '%') OR description LIKE CONCAT('%', #{search}, '%'))
+            </if>
+            <if test="title != null">
+                AND title LIKE #{title}
+            </if>
+            <if test="taskType != null">
+                AND task_type = #{taskType}
+            </if>
+            <if test="stateId != null">
+                AND state_id = #{stateId}
+            </if>
+            <if test="slug != null">
+                AND slug = #{slug}
+            </if>
+            <if test="isFeatured != null">
+                AND is_featured = #{isFeatured}
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- Select Statements -->
+    
+    <!-- Prompts -->
+    <select id="search-count" resultType="int">
+        SELECT COUNT(*) FROM prompt
+        <include refid="searchCriteria"/>
+    </select>
+
+    <select id="search" resultMap="promptResult">
+        SELECT p.*, STRING_AGG(t.tags, ',') as tags_str
+        FROM prompt p
+        LEFT JOIN prompt_tags t ON p.id = t.prompt_id
+        <where>
+            <if test="search != null">
+                AND (p.title LIKE CONCAT('%', #{search}, '%') OR p.description LIKE CONCAT('%', #{search}, '%'))
+            </if>
+            <if test="title != null">
+                AND p.title LIKE #{title}
+            </if>
+            <if test="taskType != null">
+                AND p.task_type = #{taskType}
+            </if>
+            <if test="stateId != null">
+                AND p.state_id = #{stateId}
+            </if>
+            <if test="slug != null">
+                AND p.slug = #{slug}
+            </if>
+            <if test="isFeatured != null">
+                AND p.is_featured = #{isFeatured}
+            </if>
+        </where>
+        GROUP BY p.id
+        <choose>
+            <when test="orderby != null and orderby.contains('order by 0')">
+                ORDER BY created_time DESC
+            </when>
+            <otherwise>
+                ${orderby}
+            </otherwise>
+        </choose>
+        ${pagination}
+    </select>
+
+    <!-- Search Detailed (Includes Author Info) -->
+    <select id="searchDetailed-count" resultType="int">
+        SELECT COUNT(DISTINCT p.id)
+        FROM prompt p
+        LEFT JOIN users u ON p.user_id = u.id
+        <where>
+            <if test="search != null">
+                AND (p.title LIKE CONCAT('%', #{search}, '%') OR p.description LIKE CONCAT('%', #{search}, '%'))
+            </if>
+            <if test="title != null">
+                AND p.title LIKE #{title}
+            </if>
+            <if test="taskType != null">
+                AND p.task_type = #{taskType}
+            </if>
+            <if test="stateId != null">
+                AND p.state_id = #{stateId}
+            </if>
+            <if test="slug != null">
+                AND p.slug = #{slug}
+            </if>
+            <if test="isFeatured != null">
+                AND p.is_featured = #{isFeatured}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchDetailed" resultMap="promptResult">
+        SELECT p.*, STRING_AGG(t.tags, ',') as tags_str,
+               u.full_name as author_full_name, u.picture_url as author_picture_url
+        FROM prompt p
+        LEFT JOIN users u ON p.user_id = u.id
+        LEFT JOIN prompt_tags t ON p.id = t.prompt_id
+        <where>
+            <if test="search != null">
+                AND (p.title LIKE CONCAT('%', #{search}, '%') OR p.description LIKE CONCAT('%', #{search}, '%'))
+            </if>
+            <if test="title != null">
+                AND p.title LIKE #{title}
+            </if>
+            <if test="taskType != null">
+                AND p.task_type = #{taskType}
+            </if>
+            <if test="stateId != null">
+                AND p.state_id = #{stateId}
+            </if>
+            <if test="slug != null">
+                AND p.slug = #{slug}
+            </if>
+            <if test="isFeatured != null">
+                AND p.is_featured = #{isFeatured}
+            </if>
+        </where>
+        GROUP BY p.id, u.id
+        <choose>
+            <when test="orderby != null and orderby.contains('order by 0')">
+                ORDER BY created_time DESC
+            </when>
+            <otherwise>
+                ${orderby}
+            </otherwise>
+        </choose>
+        ${pagination}
+    </select>
+
+    <select id="getBySlug" resultMap="promptResult">
+        SELECT * FROM prompt WHERE slug = #{slug}
+    </select>
+
+    <!-- Answers -->
+    <select id="getAnswers-count" resultType="int">
+        SELECT COUNT(*) FROM answer WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getAnswers" resultMap="answerResult">
+        SELECT * FROM answer WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Comments -->
+    <select id="getComments-count" resultType="int">
+        SELECT COUNT(*) FROM comment WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getComments" resultMap="commentResult">
+        SELECT * FROM comment WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Revisions -->
+    <select id="getRevisions-count" resultType="int">
+        SELECT COUNT(*) FROM prompt_revision WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getRevisions" resultMap="revisionResult">
+        SELECT * FROM prompt_revision WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Variables -->
+    <select id="getVariables-count" resultType="int">
+        SELECT COUNT(*) FROM variable WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getVariables" resultMap="variableResult">
+        SELECT * FROM variable WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Activities -->
+    <select id="getActivities-count" resultType="int">
+        SELECT COUNT(*) FROM prompt_activity WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getActivities" resultMap="activityResult">
+        SELECT * FROM prompt_activity WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Favorites -->
+    <select id="getFavorites-count" resultType="int">
+        SELECT COUNT(*) FROM favorite WHERE user_id = #{userId}
+    </select>
+    <select id="getFavorites" resultMap="favoriteResult">
+        SELECT * FROM favorite WHERE user_id = #{userId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Flags -->
+    <select id="getFlags-count" resultType="int">
+        SELECT COUNT(*) FROM flag WHERE status = #{status}
+    </select>
+    <select id="getFlags" resultMap="flagResult">
+        SELECT * FROM flag WHERE status = #{status}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Bounties -->
+    <select id="getBounties-count" resultType="int">
+        SELECT COUNT(*) FROM bounty WHERE status = #{status}
+    </select>
+    <select id="getBounties" resultMap="bountyResult">
+        SELECT * FROM bounty WHERE status = #{status}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Attachments -->
+    <select id="getAttachments-count" resultType="int">
+        SELECT COUNT(*) FROM attachment WHERE entity_id = #{entityId}
+    </select>
+    <select id="getAttachments" resultMap="attachmentResult">
+        SELECT * FROM attachment WHERE entity_id = #{entityId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Notifications -->
+    <select id="getNotifications-count" resultType="int">
+        SELECT COUNT(*) FROM notification WHERE user_id = #{userId}
+    </select>
+    <select id="getNotifications" resultMap="notificationResult">
+        SELECT * FROM notification WHERE user_id = #{userId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Model Compatibility -->
+    <select id="getModelCompatibility-count" resultType="int">
+        SELECT COUNT(*) FROM model_compatibility WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getModelCompatibility" resultMap="modelCompatibilityResult">
+        SELECT * FROM model_compatibility WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Test Cases -->
+    <select id="getTestCases-count" resultType="int">
+        SELECT COUNT(*) FROM test_cases WHERE prompt_id = #{promptId}
+    </select>
+    <select id="getTestCases" resultMap="testCaseResult">
+        SELECT * FROM test_cases WHERE prompt_id = #{promptId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Test Runs -->
+    <select id="getTestRuns-count" resultType="int">
+        SELECT COUNT(*) FROM test_runs WHERE test_case_id = #{testCaseId}
+    </select>
+    <select id="getTestRuns" resultMap="testRunResult">
+        SELECT * FROM test_runs WHERE test_case_id = #{testCaseId}
+        ${orderby} ${pagination}
+    </select>
+
+    <!-- Categories -->
+    <select id="getCategoryAll-count" resultType="int">
+        SELECT COUNT(*) FROM category
+    </select>
+    <select id="getCategoryAll" resultMap="categoryResult">
+        SELECT * FROM category
+        ${orderby} ${pagination}
+    </select>
+
+</mapper>

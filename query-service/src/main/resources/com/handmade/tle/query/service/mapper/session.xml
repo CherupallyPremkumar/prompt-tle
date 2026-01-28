@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="session">
+
+    <resultMap id="sessionResult" type="map">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="location" column="location"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="lastActivityAt" column="last_activity_at"/>
+        <result property="expiresAt" column="expires_at"/>
+    </resultMap>
+
+    <resultMap id="sessionDetailResult" type="map" extends="sessionResult">
+        <result property="userEmail" column="user_email"/>
+        <result property="userFullName" column="user_full_name"/>
+    </resultMap>
+
+    <!-- Session Queries -->
+    <select id="searchSessions-count" resultType="int">
+        SELECT COUNT(*) FROM sessions
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="isActive != null">
+                AND is_active = #{isActive}
+            </if>
+            <if test="ipAddress != null">
+                AND ip_address = #{ipAddress}
+            </if>
+            <if test="deviceType != null">
+                AND device_type = #{deviceType}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchSessions" resultMap="sessionResult">
+        SELECT * FROM sessions
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="isActive != null">
+                AND is_active = #{isActive}
+            </if>
+            <if test="ipAddress != null">
+                AND ip_address = #{ipAddress}
+            </if>
+            <if test="deviceType != null">
+                AND device_type = #{deviceType}
+            </if>
+        </where>
+        ${orderby} ${pagination}
+    </select>
+
+    <select id="getSessionById" resultMap="sessionDetailResult">
+        SELECT s.*, u.email as user_email, u.full_name as user_full_name
+        FROM sessions s
+        LEFT JOIN users u ON s.user_id = u.id
+        WHERE s.id = #{id}
+    </select>
+
+    <select id="getActiveSessions-count" resultType="int">
+        SELECT COUNT(*) FROM sessions
+        WHERE is_active = true
+        AND (expires_at IS NULL OR expires_at > NOW())
+    </select>
+
+    <select id="getActiveSessions" resultMap="sessionResult">
+        SELECT * FROM sessions
+        WHERE is_active = true
+        AND (expires_at IS NULL OR expires_at > NOW())
+        ${orderby} ${pagination}
+    </select>
+
+</mapper>

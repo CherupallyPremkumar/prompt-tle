@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<states>
+    <!-- Lifecycle Events -->
+    <event-information eventId="validate" meta-bodyType="com.handmade.tle.dto.ValidatePromptPayload"/>
+    <event-information eventId="deprecate" meta-bodyType="com.handmade.tle.dto.DeprecatePromptPayload"/>
+    <event-information eventId="submit" meta-bodyType="com.handmade.tle.dto.SubmitPromptPayload"/>
+    <event-information eventId="approve" meta-bodyType="com.handmade.tle.dto.ApprovePromptPayload"/>
+    <event-information eventId="reject" meta-bodyType="com.handmade.tle.dto.RejectPromptPayload"/>
+    
+    <!-- Engagement Events -->
+    <event-information eventId="addComment" meta-bodyType="com.handmade.tle.dto.AddCommentPayload"/>
+    <event-information eventId="upvote" meta-bodyType="com.handmade.tle.dto.UpvotePayload"/>
+    <event-information eventId="downvote" meta-bodyType="com.handmade.tle.dto.DownvotePayload"/>
+    <event-information eventId="removeVote" meta-bodyType="com.handmade.tle.dto.RemoveVotePayload"/>
+    <event-information eventId="recordImpression" meta-bodyType="com.handmade.tle.dto.ImpressionPayload"/>
+    
+    <!-- StackOverflow-Style Events -->
+    <event-information eventId="acceptAnswer" meta-bodyType="com.handmade.tle.dto.AcceptAnswerPayload"/>
+    <event-information eventId="addAnswer" meta-bodyType="com.handmade.tle.dto.AddAnswerPayload"/>
+    <event-information eventId="editPrompt" meta-bodyType="com.handmade.tle.dto.EditPromptPayload"/>
+    <event-information eventId="addTag" meta-bodyType="com.handmade.tle.dto.AddTagPayload"/>
+    <event-information eventId="removeTag" meta-bodyType="com.handmade.tle.dto.RemoveTagPayload"/>
+    <event-information eventId="addBounty" meta-bodyType="com.handmade.tle.dto.AddBountyPayload"/>
+    <event-information eventId="awardBounty" meta-bodyType="com.handmade.tle.dto.AwardBountyPayload"/>
+    <event-information eventId="flag" meta-bodyType="com.handmade.tle.dto.FlagPromptPayload"/>
+    <event-information eventId="close" meta-bodyType="com.handmade.tle.dto.ClosePromptPayload"/>
+    <event-information eventId="reopen" meta-bodyType="com.handmade.tle.dto.ReopenPromptPayload"/>
+    <event-information eventId="markDuplicate" meta-bodyType="com.handmade.tle.dto.MarkDuplicatePayload"/>
+    <event-information eventId="addFavorite" meta-bodyType="com.handmade.tle.dto.AddFavoritePayload"/>
+    <event-information eventId="removeFavorite" meta-bodyType="com.handmade.tle.dto.RemoveFavoritePayload"/>
+    <event-information eventId="addRevision" meta-bodyType="com.handmade.tle.dto.AddRevisionPayload"/>
+    <event-information eventId="viewPrompt"/>
+    <event-information eventId="rollbackRevision" meta-bodyType="com.handmade.tle.dto.RollbackRevisionPayload"/>
+
+    <flow id="prompt-flow" default="true">
+        <manual-state id="DRAFT" initialState="true">
+            <on eventId="viewPrompt" newStateId="DRAFT"/>
+            <on eventId="submit" newStateId="OPEN" componentName="submitPromptAction"/>
+            <on eventId="addComment" newStateId="DRAFT" componentName="addCommentAction"/>
+            <on eventId="editPrompt" newStateId="DRAFT" componentName="editPromptAction"/>
+            <on eventId="addTag" newStateId="DRAFT" componentName="addTagAction"/>
+            <on eventId="removeTag" newStateId="DRAFT" componentName="removeTagAction"/>
+            <on eventId="addRevision" newStateId="DRAFT" componentName="addRevisionAction"/>
+        </manual-state>
+
+        <manual-state id="OPEN">
+            <on eventId="viewPrompt" newStateId="OPEN"/>
+            <on eventId="addAnswer" newStateId="OPEN" componentName="addAnswerAction"/>
+            <on eventId="acceptAnswer" newStateId="ANSWERED" componentName="acceptAnswerAction"/>
+            <on eventId="addComment" newStateId="OPEN" componentName="addCommentAction"/>
+            <on eventId="upvote" newStateId="OPEN" componentName="upvoteAction"/>
+            <on eventId="downvote" newStateId="OPEN" componentName="downvoteAction"/>
+            <on eventId="editPrompt" newStateId="OPEN" componentName="editPromptAction"/>
+            <on eventId="addTag" newStateId="OPEN" componentName="addTagAction"/>
+            <on eventId="removeTag" newStateId="OPEN" componentName="removeTagAction"/>
+            <on eventId="addBounty" newStateId="BOUNTIED" componentName="addBountyAction"/>
+            <on eventId="flag" newStateId="OPEN" componentName="flagPromptAction"/>
+            <on eventId="close" newStateId="CLOSED" componentName="closePromptAction"/>
+            <on eventId="markDuplicate" newStateId="DUPLICATE" componentName="markDuplicateAction"/>
+            <on eventId="addFavorite" newStateId="OPEN" componentName="addFavoriteAction"/>
+            <on eventId="removeFavorite" newStateId="OPEN" componentName="removeFavoriteAction"/>
+            <on eventId="recordImpression" newStateId="OPEN" componentName="recordImpressionAction"/>
+            <on eventId="addRevision" newStateId="OPEN" componentName="addRevisionAction"/>
+            <on eventId="validate" newStateId="VALIDATED" componentName="validatePromptAction"/>
+        </manual-state>
+
+        <manual-state id="BOUNTIED">
+            <on eventId="viewPrompt" newStateId="BOUNTIED"/>
+            <on eventId="addAnswer" newStateId="BOUNTIED" componentName="addAnswerAction"/>
+            <on eventId="acceptAnswer" newStateId="ANSWERED" componentName="acceptAnswerAction"/>
+            <on eventId="awardBounty" newStateId="ANSWERED" componentName="awardBountyAction"/>
+            <on eventId="addComment" newStateId="BOUNTIED" componentName="addCommentAction"/>
+            <on eventId="upvote" newStateId="BOUNTIED" componentName="upvoteAction"/>
+            <on eventId="downvote" newStateId="BOUNTIED" componentName="downvoteAction"/>
+            <on eventId="editPrompt" newStateId="BOUNTIED" componentName="editPromptAction"/>
+            <on eventId="flag" newStateId="BOUNTIED" componentName="flagPromptAction"/>
+            <on eventId="close" newStateId="CLOSED" componentName="closePromptAction"/>
+            <on eventId="addFavorite" newStateId="BOUNTIED" componentName="addFavoriteAction"/>
+            <on eventId="recordImpression" newStateId="BOUNTIED" componentName="recordImpressionAction"/>
+        </manual-state>
+
+        <manual-state id="ANSWERED">
+            <on eventId="viewPrompt" newStateId="ANSWERED"/>
+            <on eventId="addAnswer" newStateId="ANSWERED" componentName="addAnswerAction"/>
+            <on eventId="acceptAnswer" newStateId="ANSWERED" componentName="acceptAnswerAction"/>
+            <on eventId="addComment" newStateId="ANSWERED" componentName="addCommentAction"/>
+            <on eventId="upvote" newStateId="ANSWERED" componentName="upvoteAction"/>
+            <on eventId="downvote" newStateId="ANSWERED" componentName="downvoteAction"/>
+            <on eventId="editPrompt" newStateId="ANSWERED" componentName="editPromptAction"/>
+            <on eventId="flag" newStateId="ANSWERED" componentName="flagPromptAction"/>
+            <on eventId="close" newStateId="CLOSED" componentName="closePromptAction"/>
+            <on eventId="addFavorite" newStateId="ANSWERED" componentName="addFavoriteAction"/>
+            <on eventId="recordImpression" newStateId="ANSWERED" componentName="recordImpressionAction"/>
+            <on eventId="validate" newStateId="VALIDATED" componentName="validatePromptAction"/>
+        </manual-state>
+
+        <manual-state id="VALIDATED">
+            <on eventId="viewPrompt" newStateId="VALIDATED"/>
+            <on eventId="addAnswer" newStateId="VALIDATED" componentName="addAnswerAction"/>
+            <on eventId="addComment" newStateId="VALIDATED" componentName="addCommentAction"/>
+            <on eventId="upvote" newStateId="VALIDATED" componentName="upvoteAction"/>
+            <on eventId="downvote" newStateId="VALIDATED" componentName="downvoteAction"/>
+            <on eventId="editPrompt" newStateId="VALIDATED" componentName="editPromptAction"/>
+            <on eventId="flag" newStateId="VALIDATED" componentName="flagPromptAction"/>
+            <on eventId="addFavorite" newStateId="VALIDATED" componentName="addFavoriteAction"/>
+            <on eventId="recordImpression" newStateId="VALIDATED" componentName="recordImpressionAction"/>
+            <on eventId="deprecate" newStateId="DEPRECATED" componentName="deprecatePromptAction"/>
+            <on eventId="acceptAnswer" newStateId="VALIDATED" componentName="acceptAnswerAction"/>
+            <on eventId="addRevision" newStateId="VALIDATED" componentName="addRevisionAction"/>
+            <on eventId="close" newStateId="CLOSED" componentName="closePromptAction"/>
+        </manual-state>
+
+        <manual-state id="CLOSED">
+            <on eventId="viewPrompt" newStateId="CLOSED"/>
+            <on eventId="reopen" newStateId="OPEN" componentName="reopenPromptAction"/>
+            <on eventId="addComment" newStateId="CLOSED" componentName="addCommentAction"/>
+            <on eventId="recordImpression" newStateId="CLOSED" componentName="recordImpressionAction"/>
+            <on eventId="flag" newStateId="CLOSED" componentName="flagPromptAction"/>
+        </manual-state>
+
+        <manual-state id="DUPLICATE">
+            <on eventId="viewPrompt" newStateId="DUPLICATE"/>
+            <on eventId="reopen" newStateId="OPEN" componentName="reopenPromptAction"/>
+            <on eventId="addComment" newStateId="DUPLICATE" componentName="addCommentAction"/>
+            <on eventId="recordImpression" newStateId="DUPLICATE" componentName="recordImpressionAction"/>
+            <on eventId="close" newStateId="CLOSED" componentName="closePromptAction"/>
+        </manual-state>
+
+        <manual-state id="DEPRECATED">
+            <on eventId="viewPrompt" newStateId="DEPRECATED"/>
+            <on eventId="addComment" newStateId="DEPRECATED" componentName="addCommentAction"/>
+            <on eventId="recordImpression" newStateId="DEPRECATED" componentName="recordImpressionAction"/>
+        </manual-state>
+    </flow>
+</states>

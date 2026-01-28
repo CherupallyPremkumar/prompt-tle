@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.handmade.tle</groupId>
+		<artifactId>prompt-parent</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>storage-service-infra</artifactId>
+	<name>Storage Service Infrastructure</name>
+	<description>Implementations for S3, GCS, and other cloud providers</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>storage-service-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>shared-library</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<!-- AWS SDK v2 -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+		</dependency>
+		<!-- Google Cloud Storage -->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.chenile</groupId>
+			<artifactId>chenile-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.chenile</groupId>
+			<artifactId>chenile-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+</project>

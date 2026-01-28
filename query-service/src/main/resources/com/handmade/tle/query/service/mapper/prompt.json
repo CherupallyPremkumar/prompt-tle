@@ -1,0 +1,564 @@
+[
+	{
+		"id": "prompt.search",
+		"name": "prompt.search",
+		"columnMetadata": {
+			"id": {
+				"name": "id",
+				"filterable": true,
+				"sortable": true
+			},
+			"slug": {
+				"name": "slug",
+				"filterable": true
+			},
+			"title": {
+				"name": "title",
+				"friendlyName": "Title",
+				"columnName": "title",
+				"filterable": true,
+				"likeQuery": true
+			},
+			"description": {
+				"name": "description"
+			},
+			"template": {
+				"name": "template"
+			},
+			"body": {
+				"name": "body"
+			},
+			"systemPrompt": {
+				"name": "systemPrompt"
+			},
+			"taskType": {
+				"name": "taskType",
+				"filterable": true
+			},
+			"stateId": {
+				"name": "stateId",
+				"filterable": true
+			},
+			"flowId": {
+				"name": "flowId"
+			},
+			"validationScore": {
+				"name": "validationScore",
+				"friendlyName": "Validated Score",
+				"columnName": "validation_score",
+				"sortable": true
+			},
+			"lastValidatedAt": {
+				"name": "lastValidatedAt"
+			},
+			"semanticVersion": {
+				"name": "semanticVersion",
+				"sortable": true
+			},
+			"parentVersionId": {
+				"name": "parentVersionId"
+			},
+			"changelog": {
+				"name": "changelog"
+			},
+			"recommendedModel": {
+				"name": "recommendedModel",
+				"filterable": true
+			},
+			"userId": {
+				"name": "userId",
+				"filterable": true
+			},
+			"authorUsername": {
+				"name": "authorUsername",
+				"filterable": true
+			},
+			"usageCount": {
+				"name": "usageCount",
+				"friendlyName": "Trending",
+				"columnName": "usage_count",
+				"sortable": true
+			},
+			"viewCount": {
+				"name": "viewCount",
+				"friendlyName": "Most Viewed",
+				"columnName": "view_count",
+				"sortable": true
+			},
+			"favoriteCount": {
+				"name": "favoriteCount",
+				"friendlyName": "Most Favorited",
+				"columnName": "favorite_count",
+				"sortable": true
+			},
+			"score": {
+				"name": "score",
+				"friendlyName": "Top Rated",
+				"columnName": "score",
+				"sortable": true
+			},
+			"acceptedAnswerId": {
+				"name": "acceptedAnswerId"
+			},
+			"answerCount": {
+				"name": "answerCount",
+				"friendlyName": "Most Answered",
+				"columnName": "answer_count",
+				"sortable": true
+			},
+			"commentCount": {
+				"name": "commentCount",
+				"friendlyName": "Most Commented",
+				"columnName": "comment_count",
+				"sortable": true
+			},
+			"duplicateOfPromptId": {
+				"name": "duplicateOfPromptId"
+			},
+			"closeReason": {
+				"name": "closeReason"
+			},
+			"closedAt": {
+				"name": "closedAt"
+			},
+			"closedByUserId": {
+				"name": "closedByUserId"
+			},
+			"revisionNumber": {
+				"name": "revisionNumber",
+				"sortable": true
+			},
+			"imageUrl": {
+				"name": "imageUrl"
+			},
+			"creatorRole": {
+				"name": "creatorRole"
+			},
+			"createdTime": {
+				"name": "createdTime",
+				"friendlyName": "Newest",
+				"columnName": "created_time",
+				"sortable": true
+			},
+			"lastModifiedTime": {
+				"name": "lastModifiedTime"
+			},
+			"lastModifiedBy": {
+				"name": "lastModifiedBy"
+			},
+			"tenant": {
+				"name": "tenant"
+			},
+			"createdBy": {
+				"name": "createdBy"
+			},
+			"version": {
+				"name": "version"
+			},
+			"isFeatured": {
+				"name": "isFeatured",
+				"friendlyName": "Featured",
+				"columnName": "is_featured",
+				"filterable": true,
+				"sortable": true
+			},
+			"forkedFromPromptId": {
+				"name": "forkedFromPromptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true,
+		"workflowName": "prompt",
+		"stateColumn": "stateId",
+		"flowColumn": "flowId",
+		"acls": []
+	},
+	{
+		"id": "prompt.getBySlug",
+		"name": "prompt.getBySlug",
+		"columnMetadata": {
+			"slug": {
+				"name": "slug",
+				"filterable": true
+			}
+		},
+		"paginated": false,
+		"sortable": false,
+		"workflowName": "prompt",
+		"stateColumn": "stateId",
+		"flowColumn": "flowId",
+		"acls": []
+	},
+	{
+		"id": "prompt.getAnswers",
+		"name": "prompt.getAnswers",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getModelCompatibility",
+		"name": "prompt.getModelCompatibility",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getTestCases",
+		"name": "prompt.getTestCases",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getTestRuns",
+		"name": "prompt.getTestRuns",
+		"columnMetadata": {
+			"testCaseId": {
+				"name": "testCaseId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getComments",
+		"name": "prompt.getComments",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getRevisions",
+		"name": "prompt.getRevisions",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getVariables",
+		"name": "prompt.getVariables",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getActivities",
+		"name": "prompt.getActivities",
+		"columnMetadata": {
+			"promptId": {
+				"name": "promptId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getFavorites",
+		"name": "prompt.getFavorites",
+		"columnMetadata": {
+			"userId": {
+				"name": "userId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getFlags",
+		"name": "prompt.getFlags",
+		"columnMetadata": {
+			"status": {
+				"name": "status",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getBounties",
+		"name": "prompt.getBounties",
+		"columnMetadata": {
+			"status": {
+				"name": "status",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getAttachments",
+		"name": "prompt.getAttachments",
+		"columnMetadata": {
+			"entityId": {
+				"name": "entityId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getNotifications",
+		"name": "prompt.getNotifications",
+		"columnMetadata": {
+			"userId": {
+				"name": "userId",
+				"filterable": true
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.getCategoryAll",
+		"name": "prompt.getCategoryAll",
+		"columnMetadata": {
+			"id": {
+				"name": "id",
+				"sortable": true
+			},
+			"name": {
+				"name": "name",
+				"sortable": true,
+				"filterable": true
+			},
+			"slug": {
+				"name": "slug",
+				"filterable": true
+			},
+			"icon": {
+				"name": "icon"
+			},
+			"color": {
+				"name": "color"
+			},
+			"description": {
+				"name": "description"
+			}
+		},
+		"paginated": true,
+		"sortable": true
+	},
+	{
+		"id": "prompt.searchDetailed",
+		"name": "prompt.searchDetailed",
+		"columnMetadata": {
+			"id": {
+				"name": "id",
+				"filterable": true,
+				"sortable": true
+			},
+			"slug": {
+				"name": "slug",
+				"filterable": true
+			},
+			"title": {
+				"name": "title",
+				"friendlyName": "Title",
+				"columnName": "title",
+				"filterable": true,
+				"likeQuery": true
+			},
+			"description": {
+				"name": "description"
+			},
+			"template": {
+				"name": "template"
+			},
+			"body": {
+				"name": "body"
+			},
+			"systemPrompt": {
+				"name": "systemPrompt"
+			},
+			"taskType": {
+				"name": "taskType",
+				"filterable": true
+			},
+			"stateId": {
+				"name": "stateId",
+				"filterable": true
+			},
+			"flowId": {
+				"name": "flowId"
+			},
+			"validationScore": {
+				"name": "validationScore",
+				"friendlyName": "Validated Score",
+				"columnName": "validation_score",
+				"sortable": true
+			},
+			"lastValidatedAt": {
+				"name": "lastValidatedAt"
+			},
+			"semanticVersion": {
+				"name": "semanticVersion",
+				"sortable": true
+			},
+			"parentVersionId": {
+				"name": "parentVersionId"
+			},
+			"changelog": {
+				"name": "changelog"
+			},
+			"recommendedModel": {
+				"name": "recommendedModel",
+				"filterable": true
+			},
+			"userId": {
+				"name": "userId",
+				"filterable": true
+			},
+			"authorUsername": {
+				"name": "authorUsername",
+				"filterable": true
+			},
+			"usageCount": {
+				"name": "usageCount",
+				"friendlyName": "Trending",
+				"columnName": "usage_count",
+				"sortable": true
+			},
+			"viewCount": {
+				"name": "viewCount",
+				"friendlyName": "Most Viewed",
+				"columnName": "view_count",
+				"sortable": true
+			},
+			"favoriteCount": {
+				"name": "favoriteCount",
+				"friendlyName": "Most Favorited",
+				"columnName": "favorite_count",
+				"sortable": true
+			},
+			"score": {
+				"name": "score",
+				"friendlyName": "Top Rated",
+				"columnName": "score",
+				"sortable": true
+			},
+			"acceptedAnswerId": {
+				"name": "acceptedAnswerId"
+			},
+			"answerCount": {
+				"name": "answerCount",
+				"friendlyName": "Most Answered",
+				"columnName": "answer_count",
+				"sortable": true
+			},
+			"commentCount": {
+				"name": "commentCount",
+				"friendlyName": "Most Commented",
+				"columnName": "comment_count",
+				"sortable": true
+			},
+			"duplicateOfPromptId": {
+				"name": "duplicateOfPromptId"
+			},
+			"closeReason": {
+				"name": "closeReason"
+			},
+			"closedAt": {
+				"name": "closedAt"
+			},
+			"closedByUserId": {
+				"name": "closedByUserId"
+			},
+			"revisionNumber": {
+				"name": "revisionNumber",
+				"sortable": true
+			},
+			"imageUrl": {
+				"name": "imageUrl"
+			},
+			"creatorRole": {
+				"name": "creatorRole"
+			},
+			"createdTime": {
+				"name": "createdTime",
+				"friendlyName": "Newest",
+				"columnName": "created_time",
+				"sortable": true
+			},
+			"lastModifiedTime": {
+				"name": "lastModifiedTime"
+			},
+			"lastModifiedBy": {
+				"name": "lastModifiedBy"
+			},
+			"tenant": {
+				"name": "tenant"
+			},
+			"createdBy": {
+				"name": "createdBy"
+			},
+			"version": {
+				"name": "version"
+			},
+			"isFeatured": {
+				"name": "isFeatured",
+				"friendlyName": "Featured",
+				"columnName": "is_featured",
+				"filterable": true,
+				"sortable": true
+			},
+			"forkedFromPromptId": {
+				"name": "forkedFromPromptId",
+				"filterable": true
+			},
+			"authorFullName": {
+				"name": "authorFullName",
+				"friendlyName": "Author Name",
+				"columnName": "author_full_name",
+				"filterable": true,
+				"sortable": true
+			},
+			"authorPictureUrl": {
+				"name": "authorPictureUrl"
+			}
+		},
+		"paginated": true,
+		"sortable": true,
+		"workflowName": "prompt",
+		"stateColumn": "stateId",
+		"flowColumn": "flowId",
+		"acls": []
+	}
+]
