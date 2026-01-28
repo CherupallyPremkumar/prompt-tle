@@ -2,7 +2,6 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
-COPY .flattened-pom.xml .
 COPY shared-library shared-library
 COPY storage-service-api storage-service-api
 COPY storage-service-infra storage-service-infra
