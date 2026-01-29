@@ -13,14 +13,10 @@ import org.springframework.http.ResponseEntity;
 
 import org.chenile.stm.StateEntity;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.chenile.workflow.dto.StateEntityServiceResponse;
 import com.handmade.tle.shared.model.Prompt;
+
 
 @RestController
 @ChenileController(value = "promptService", serviceName = "_promptStateEntityService_",
