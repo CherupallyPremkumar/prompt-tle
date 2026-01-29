@@ -15,7 +15,6 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 
 import com.handmade.tle.kafka.loader.KafkaCertificateLoader;
-import com.handmade.tle.kafka.loader.LocalCertificateLoader;
 import com.handmade.tle.kafka.loader.ProductionCertificateLoader;
 
 @Configuration
@@ -47,14 +46,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    @Profile("!prod")
-    public static KafkaCertificateLoader localCertificateLoader() {
-        return new LocalCertificateLoader();
-    }
-
-    @Bean
-    @Profile("prod")
-    public static KafkaCertificateLoader productionCertificateLoader() {
+    public static KafkaCertificateLoader certificateLoader() {
         return new ProductionCertificateLoader();
     }
 
