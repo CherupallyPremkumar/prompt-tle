@@ -18,3 +18,9 @@ test_upload.png
 boot_classes.txt
 tree.txt
 .flattened-pom.xml
+
+# Kafka Certificates
+kafka-configuration/src/main/resources/kafka/*.p12
+kafka-configuration/src/main/resources/kafka/*.jks
+client.keystore.p12
+client.truststore.jks

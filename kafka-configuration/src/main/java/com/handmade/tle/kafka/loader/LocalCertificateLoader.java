@@ -1,6 +1,6 @@
 package com.handmade.tle.kafka.loader;
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ public class LocalCertificateLoader implements KafkaCertificateLoader {
     @Override
     public String loadCertificate(String filename, String content) throws IOException {
         // If content is provided (e.g. from env vars), use it even in local profile
-        if (content != null && !content.isBlank()) {
+        if (content != null && !content.isBlank() && !"dummy".equalsIgnoreCase(content)) {
             Path tempFile = Files.createTempFile(filename, ".tmp");
             String sanitizedContent = content.replaceAll("\\s+", "");
             Files.write(tempFile, Base64.getDecoder().decode(sanitizedContent));
@@ -25,13 +25,6 @@ public class LocalCertificateLoader implements KafkaCertificateLoader {
         // Fallback: look for the file in classpath
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("kafka/" + filename)) {
             if (inputStream == null) {
-                // Return original local path if it exists for backward compat during dev
-                File localFile = new File(
-                        "/Users/premkumar/Documents/TokenLimitExceeded/api-gateway/src/main/resources/kafka/"
-                                + filename);
-                if (localFile.exists()) {
-                    return localFile.getAbsolutePath();
-                }
                 throw new FileNotFoundException(
                         "Certificate not found in provided content, classpath, or filesystem: kafka/" + filename);
             }
