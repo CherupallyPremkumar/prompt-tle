@@ -2,8 +2,6 @@ package com.handmade.tle.upload.service;
 
 import com.handmade.tle.shared.dto.PresignedUploadRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -13,14 +11,12 @@ import java.util.Set;
  * Validates file type, size, and other security constraints.
  */
 @Slf4j
-@Service
+@lombok.RequiredArgsConstructor
 public class ValidationService {
 
-    @Value("${upload.security.max-file-size:10485760}")
-    private Long maxFileSize;
+    private final Long maxFileSize;
 
-    @Value("${upload.security.allowed-content-types:image/jpeg,image/png,image/gif,image/webp,application/pdf}")
-    private List<String> allowedContentTypes;
+    private final List<String> allowedContentTypes;
 
     private static final Set<String> DANGEROUS_EXTENSIONS = Set.of(
             "exe", "bat", "cmd", "sh", "php", "js", "jar");

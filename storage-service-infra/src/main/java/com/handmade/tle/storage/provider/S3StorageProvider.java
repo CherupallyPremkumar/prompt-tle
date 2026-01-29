@@ -4,9 +4,6 @@ import com.handmade.tle.storage.StorageProvider;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -25,20 +22,19 @@ import java.util.Map;
  * AWS S3 Storage Provider Implementation
  */
 @Slf4j
-@ConditionalOnProperty(name = "cloud.storage.provider", havingValue = "s3")
 public class S3StorageProvider implements StorageProvider {
 
-    @Value("${cloud.storage.s3.region}")
-    private String region;
+    private final String region;
+    private final String bucketName;
+    private final String accessKey;
+    private final String secretKey;
 
-    @Value("${cloud.storage.s3.bucketName}")
-    private String bucketName;
-
-    @Value("${cloud.storage.s3.access-key}")
-    private String accessKey;
-
-    @Value("${cloud.storage.s3.secret-key}")
-    private String secretKey;
+    public S3StorageProvider(String region, String bucketName, String accessKey, String secretKey) {
+        this.region = region;
+        this.bucketName = bucketName;
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
+    }
 
     private S3Client s3Client;
     private S3Presigner s3Presigner;
@@ -46,14 +42,14 @@ public class S3StorageProvider implements StorageProvider {
     @PostConstruct
     public void init() {
         log.info("Initializing S3 Storage Provider - Region: {}, Bucket: {}", region, bucketName);
-        
+
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
-        
+
         this.s3Client = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
-        
+
         this.s3Presigner = S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
@@ -67,7 +63,7 @@ public class S3StorageProvider implements StorageProvider {
             Long fileSizeBytes,
             Duration expiration,
             Map<String, String> metadata) {
-        
+
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -84,7 +80,7 @@ public class S3StorageProvider implements StorageProvider {
 
             PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
             return presignedRequest.url().toString();
-            
+
         } catch (S3Exception e) {
             log.error("Failed to generate presigned upload URL for key: {}", fileKey, e);
             throw new RuntimeException("Failed to generate presigned upload URL", e);
@@ -106,7 +102,7 @@ public class S3StorageProvider implements StorageProvider {
 
             PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
             return presignedRequest.url().toString();
-            
+
         } catch (S3Exception e) {
             log.error("Failed to generate presigned download URL for key: {}", fileKey, e);
             throw new RuntimeException("Failed to generate presigned download URL", e);
@@ -174,7 +170,9 @@ public class S3StorageProvider implements StorageProvider {
 
     @PreDestroy
     public void cleanup() {
-        if (s3Client != null) s3Client.close();
-        if (s3Presigner != null) s3Presigner.close();
+        if (s3Client != null)
+            s3Client.close();
+        if (s3Presigner != null)
+            s3Presigner.close();
     }
 }

@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <states>
     <!-- Lifecycle Events -->
-    <event-information eventId="validate" meta-bodyType="com.handmade.tle.dto.ValidatePromptPayload"/>
-    <event-information eventId="deprecate" meta-bodyType="com.handmade.tle.dto.DeprecatePromptPayload"/>
-    <event-information eventId="submit" meta-bodyType="com.handmade.tle.dto.SubmitPromptPayload"/>
-    <event-information eventId="approve" meta-bodyType="com.handmade.tle.dto.ApprovePromptPayload"/>
-    <event-information eventId="reject" meta-bodyType="com.handmade.tle.dto.RejectPromptPayload"/>
+    <event-information eventId="validate" meta-bodyType="com.handmade.tle.shared.dto.ValidatePromptPayload"/>
+    <event-information eventId="deprecate" meta-bodyType="com.handmade.tle.shared.dto.DeprecatePromptPayload"/>
+    <event-information eventId="submit" meta-bodyType="com.handmade.tle.shared.dto.SubmitPromptPayload"/>
+    <event-information eventId="approve" meta-bodyType="com.handmade.tle.shared.dto.ApprovePromptPayload"/>
+    <event-information eventId="reject" meta-bodyType="com.handmade.tle.shared.dto.RejectPromptPayload"/>
     
     <!-- Engagement Events -->
-    <event-information eventId="addComment" meta-bodyType="com.handmade.tle.dto.AddCommentPayload"/>
-    <event-information eventId="upvote" meta-bodyType="com.handmade.tle.dto.UpvotePayload"/>
-    <event-information eventId="downvote" meta-bodyType="com.handmade.tle.dto.DownvotePayload"/>
-    <event-information eventId="removeVote" meta-bodyType="com.handmade.tle.dto.RemoveVotePayload"/>
-    <event-information eventId="recordImpression" meta-bodyType="com.handmade.tle.dto.ImpressionPayload"/>
+    <event-information eventId="addComment" meta-bodyType="com.handmade.tle.shared.dto.AddCommentPayload"/>
+    <event-information eventId="upvote" meta-bodyType="com.handmade.tle.shared.dto.UpvotePayload"/>
+    <event-information eventId="downvote" meta-bodyType="com.handmade.tle.shared.dto.DownvotePayload"/>
+    <event-information eventId="removeVote" meta-bodyType="com.handmade.tle.shared.dto.RemoveVotePayload"/>
+    <event-information eventId="recordImpression" meta-bodyType="com.handmade.tle.shared.dto.ImpressionPayload"/>
     
     <!-- StackOverflow-Style Events -->
-    <event-information eventId="acceptAnswer" meta-bodyType="com.handmade.tle.dto.AcceptAnswerPayload"/>
-    <event-information eventId="addAnswer" meta-bodyType="com.handmade.tle.dto.AddAnswerPayload"/>
-    <event-information eventId="editPrompt" meta-bodyType="com.handmade.tle.dto.EditPromptPayload"/>
-    <event-information eventId="addTag" meta-bodyType="com.handmade.tle.dto.AddTagPayload"/>
-    <event-information eventId="removeTag" meta-bodyType="com.handmade.tle.dto.RemoveTagPayload"/>
-    <event-information eventId="addBounty" meta-bodyType="com.handmade.tle.dto.AddBountyPayload"/>
-    <event-information eventId="awardBounty" meta-bodyType="com.handmade.tle.dto.AwardBountyPayload"/>
-    <event-information eventId="flag" meta-bodyType="com.handmade.tle.dto.FlagPromptPayload"/>
-    <event-information eventId="close" meta-bodyType="com.handmade.tle.dto.ClosePromptPayload"/>
-    <event-information eventId="reopen" meta-bodyType="com.handmade.tle.dto.ReopenPromptPayload"/>
-    <event-information eventId="markDuplicate" meta-bodyType="com.handmade.tle.dto.MarkDuplicatePayload"/>
-    <event-information eventId="addFavorite" meta-bodyType="com.handmade.tle.dto.AddFavoritePayload"/>
-    <event-information eventId="removeFavorite" meta-bodyType="com.handmade.tle.dto.RemoveFavoritePayload"/>
-    <event-information eventId="addRevision" meta-bodyType="com.handmade.tle.dto.AddRevisionPayload"/>
+    <event-information eventId="acceptAnswer" meta-bodyType="com.handmade.tle.shared.dto.AcceptAnswerPayload"/>
+    <event-information eventId="addAnswer" meta-bodyType="com.handmade.tle.shared.dto.AddAnswerPayload"/>
+    <event-information eventId="editPrompt" meta-bodyType="com.handmade.tle.shared.dto.EditPromptPayload"/>
+    <event-information eventId="addTag" meta-bodyType="com.handmade.tle.shared.dto.AddTagPayload"/>
+    <event-information eventId="removeTag" meta-bodyType="com.handmade.tle.shared.dto.RemoveTagPayload"/>
+    <event-information eventId="addBounty" meta-bodyType="com.handmade.tle.shared.dto.AddBountyPayload"/>
+    <event-information eventId="awardBounty" meta-bodyType="com.handmade.tle.shared.dto.AwardBountyPayload"/>
+    <event-information eventId="flag" meta-bodyType="com.handmade.tle.shared.dto.FlagPromptPayload"/>
+    <event-information eventId="close" meta-bodyType="com.handmade.tle.shared.dto.ClosePromptPayload"/>
+    <event-information eventId="reopen" meta-bodyType="com.handmade.tle.shared.dto.ReopenPromptPayload"/>
+    <event-information eventId="markDuplicate" meta-bodyType="com.handmade.tle.shared.dto.MarkDuplicatePayload"/>
+    <event-information eventId="addFavorite" meta-bodyType="com.handmade.tle.shared.dto.AddFavoritePayload"/>
+    <event-information eventId="removeFavorite" meta-bodyType="com.handmade.tle.shared.dto.RemoveFavoritePayload"/>
+    <event-information eventId="addRevision" meta-bodyType="com.handmade.tle.shared.dto.AddRevisionPayload"/>
     <event-information eventId="viewPrompt"/>
-    <event-information eventId="rollbackRevision" meta-bodyType="com.handmade.tle.dto.RollbackRevisionPayload"/>
+    <event-information eventId="rollbackRevision" meta-bodyType="com.handmade.tle.shared.dto.RollbackRevisionPayload"/>
 
     <flow id="prompt-flow" default="true">
         <manual-state id="DRAFT" initialState="true">

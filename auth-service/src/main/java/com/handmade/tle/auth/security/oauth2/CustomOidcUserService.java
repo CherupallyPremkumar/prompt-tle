@@ -7,23 +7,24 @@ import com.handmade.tle.shared.model.Role;
 import com.handmade.tle.shared.model.RoleName;
 import com.handmade.tle.shared.model.User;
 import com.handmade.tle.auth.security.CustomUserDetails;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
-@Service
-@RequiredArgsConstructor
 public class CustomOidcUserService extends OidcUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    public CustomOidcUserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {

@@ -1,16 +1,22 @@
-package com.handmade.tle.gateway.config;
+package com.handmade.tle.kafka.configuration;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.support.converter.RecordMessageConverter;
+
+import com.handmade.tle.kafka.loader.KafkaCertificateLoader;
+import com.handmade.tle.kafka.loader.LocalCertificateLoader;
+import com.handmade.tle.kafka.loader.ProductionCertificateLoader;
 
 @Configuration
 @EnableKafka
@@ -19,13 +25,13 @@ public class KafkaConfig {
     @org.springframework.beans.factory.annotation.Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @org.springframework.beans.factory.annotation.Value("${spring.kafka.consumer.group-id}")
+    @org.springframework.beans.factory.annotation.Value("${spring.kafka.consumer.group-id:api-gateway-group}")
     private String groupId;
 
-    @org.springframework.beans.factory.annotation.Value("${spring.ssl.bundle.jks.kafka.keystore.password}")
+    @org.springframework.beans.factory.annotation.Value("${spring.ssl.bundle.jks.kafka.keystore.password:}")
     private String keystorePassword;
 
-    @org.springframework.beans.factory.annotation.Value("${spring.ssl.bundle.jks.kafka.truststore.password}")
+    @org.springframework.beans.factory.annotation.Value("${spring.ssl.bundle.jks.kafka.truststore.password:}")
     private String truststorePassword;
 
     @org.springframework.beans.factory.annotation.Value("${spring.kafka.ssl.keystore-content:}")
@@ -34,8 +40,23 @@ public class KafkaConfig {
     @org.springframework.beans.factory.annotation.Value("${spring.kafka.ssl.truststore-content:}")
     private String truststoreContent;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private com.handmade.tle.gateway.config.loader.KafkaCertificateLoader certificateLoader;
+    private final KafkaCertificateLoader certificateLoader;
+
+    public KafkaConfig(KafkaCertificateLoader certificateLoader) {
+        this.certificateLoader = certificateLoader;
+    }
+
+    @Bean
+    @Profile("!prod")
+    public static KafkaCertificateLoader localCertificateLoader() {
+        return new LocalCertificateLoader();
+    }
+
+    @Bean
+    @Profile("prod")
+    public static KafkaCertificateLoader productionCertificateLoader() {
+        return new ProductionCertificateLoader();
+    }
 
     private String keystoreLocation;
     private String truststoreLocation;
@@ -55,13 +76,14 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    @Primary
+    public ProducerFactory<String, Object> sslProducerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 org.apache.kafka.common.serialization.StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                org.springframework.kafka.support.serializer.JsonSerializer.class);
+                org.apache.kafka.common.serialization.StringSerializer.class);
 
         configureSsl(props);
 
@@ -69,20 +91,24 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
-        return new KafkaTemplate<>(producerFactory);
+    @Primary
+    public KafkaTemplate<String, Object> sslKafkaTemplate(ProducerFactory<String, Object> producerFactory,
+                                                     RecordMessageConverter messageConverter) {
+        KafkaTemplate<String, Object> template = new KafkaTemplate<>(producerFactory);
+        template.setMessageConverter(messageConverter);
+        return template;
     }
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    @Primary
+    public ConsumerFactory<String, Object> sslConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 org.apache.kafka.common.serialization.StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                org.springframework.kafka.support.serializer.JsonDeserializer.class);
-        props.put(org.springframework.kafka.support.serializer.JsonDeserializer.TRUSTED_PACKAGES, "*");
+                org.apache.kafka.common.serialization.StringDeserializer.class);
 
         configureSsl(props);
 
@@ -90,10 +116,13 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
-            ConsumerFactory<String, Object> consumerFactory) {
+    @Primary
+    public ConcurrentKafkaListenerContainerFactory<String, Object> sslKafkaListenerContainerFactory(
+            ConsumerFactory<String, Object> consumerFactory,
+            RecordMessageConverter messageConverter) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
+        factory.setRecordMessageConverter(messageConverter);
         return factory;
     }
 

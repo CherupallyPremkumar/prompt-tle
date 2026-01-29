@@ -1,16 +1,19 @@
 package com.handmade.tle.prompt.bdd;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
 import org.springframework.test.context.ActiveProfiles;
 
+import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
+import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features", glue = { "classpath:com.handmade.tle/prompt/bdd",
-        "classpath:org/chenile/cucumber/rest",
-        "classpath:org/chenile/cucumber/workflow" },
-        plugin = { "pretty" })
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.chenile.cucumber.rest,com.handmade.tle.prompt.bdd")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 @ActiveProfiles("unittest")
 public class CukesRestTest {
 

@@ -6,12 +6,9 @@ import com.handmade.tle.auth.security.CustomUserDetails;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -22,15 +19,19 @@ import java.util.Optional;
 import static com.handmade.tle.auth.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Slf4j
-@Component
-@RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider tokenProvider;
     private final HttpCookieOAuth2AuthorizationRequestRepository requestRepository;
+    private final List<String> authorizedRedirectUris;
 
-    @Value("${app.oauth2.authorized-redirect-uris}")
-    private List<String> authorizedRedirectUris;
+    public OAuth2AuthenticationSuccessHandler(JwtTokenProvider tokenProvider,
+            HttpCookieOAuth2AuthorizationRequestRepository requestRepository,
+            List<String> authorizedRedirectUris) {
+        this.tokenProvider = tokenProvider;
+        this.requestRepository = requestRepository;
+        this.authorizedRedirectUris = authorizedRedirectUris;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

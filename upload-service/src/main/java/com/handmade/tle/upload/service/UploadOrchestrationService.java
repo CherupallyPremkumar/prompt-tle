@@ -1,23 +1,18 @@
 package com.handmade.tle.upload.service;
 
-import com.google.common.base.Verify;
-import com.handmade.tle.quota.QuotaManagementService;
 import com.handmade.tle.shared.dto.*;
 import com.handmade.tle.shared.model.Upload;
 import com.handmade.tle.shared.model.UploadStatus;
 import com.handmade.tle.shared.repository.UploadRepository;
 import com.handmade.tle.storage.StorageProvider;
 import com.handmade.tle.upload.event.UploadEventPublisher;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,18 +21,26 @@ import java.util.UUID;
  * Matches the business logic in the microservices spec.
  */
 @Slf4j
-@Service
-@RequiredArgsConstructor
 public class UploadOrchestrationService {
 
     private final StorageProvider storageProvider;
-    private final QuotaManagementService quotaService;
     private final UploadRepository uploadRepository;
     private final UploadEventPublisher uploadEventPublisher;
     private final ValidationService validationService;
 
-    @Value("${cloud.storage.expiration:300}")
-    private int presignedExpirationSeconds;
+    private final int presignedExpirationSeconds;
+
+    public UploadOrchestrationService(StorageProvider storageProvider,
+            UploadRepository uploadRepository,
+            UploadEventPublisher uploadEventPublisher,
+            ValidationService validationService,
+            int presignedExpirationSeconds) {
+        this.storageProvider = storageProvider;
+        this.uploadRepository = uploadRepository;
+        this.uploadEventPublisher = uploadEventPublisher;
+        this.validationService = validationService;
+        this.presignedExpirationSeconds = presignedExpirationSeconds;
+    }
 
     /**
      * Step 1: Generate presigned URL
@@ -52,13 +55,14 @@ public class UploadOrchestrationService {
         // 1. Validate request
         validationService.validateUploadRequest(request);
 
-        // 2. Check quota with Quota Service
-        // Bypassing for Kafka testing as Redis is not configured
-        // var quotaResponse = quotaService.checkStorageQuota(userId,
-        // request.getFileSize());
-        // if (!quotaResponse.isAllowed()) {
-        // throw new RuntimeException("Quota exceeded: " + quotaResponse.getMessage());
-        // }
+        // 2. Check quota with Quota Service (Commented out as Redis is not configured)
+        /*
+         * var quotaResponse = quotaService.checkStorageQuota(userId,
+         * request.getFileSize());
+         * if (!quotaResponse.isAllowed()) {
+         * throw new RuntimeException("Quota exceeded: " + quotaResponse.getMessage());
+         * }
+         */
 
         // 3. Generate unique file key and upload ID
         String fileKey = generateFileKey(userId, request.getFilename(), request.getFolder());
@@ -94,7 +98,7 @@ public class UploadOrchestrationService {
         uploadRepository.save(upload);
         log.info("✅ Upload metadata saved: {}", uploadId);
 
-        // 6. Reserve quota
+        // 6. Reserve quota (Commented out)
         // quotaService.reserveStorageQuota(userId, request.getFileSize());
         log.info("✅ Quota reserved for upload: {}", uploadId);
 
@@ -124,14 +128,14 @@ public class UploadOrchestrationService {
             throw new RuntimeException("Unauthorized: This upload does not belong to you.");
         }
 
-         //2. Verify file exists in storage
-         boolean exists = storageProvider.fileExists(request.getFileKey());
-         if (!exists) {
-         log.error("❌ File not found in storage: {}", request.getFileKey());
-         upload.setStatus(UploadStatus.FAILED);
-         uploadRepository.save(upload);
-         throw new RuntimeException("File not found in storage. Please upload the file before confirming.");
-         }
+        // 2. Verify file exists in storage
+        boolean exists = storageProvider.fileExists(request.getFileKey());
+        if (!exists) {
+            log.error("❌ File not found in storage: {}", request.getFileKey());
+            upload.setStatus(UploadStatus.FAILED);
+            uploadRepository.save(upload);
+            throw new RuntimeException("File not found in storage. Please upload the file before confirming.");
+        }
 
         // 3. Update upload status
         upload.setStatus(UploadStatus.COMPLETED);
@@ -139,7 +143,7 @@ public class UploadOrchestrationService {
         uploadRepository.save(upload);
         log.info("✅ Upload status updated to COMPLETED");
 
-        // 4. Confirm quota with Quota Service
+        // 4. Confirm quota with Quota Service (Commented out)
         // quotaService.confirmStorageUpload(userId, request.getUploadId());
         log.info("✅ Quota confirmed");
 

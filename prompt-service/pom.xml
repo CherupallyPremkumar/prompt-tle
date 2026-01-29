@@ -6,6 +6,7 @@
 		<groupId>com.handmade.tle</groupId>
 		<artifactId>prompt-parent</artifactId>
 		<version>${revision}</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>prompt-service</artifactId>
@@ -25,6 +26,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
 	    </dependency>
+	    <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.chenile</groupId>
 			<artifactId>chenile-http</artifactId>
@@ -61,7 +66,18 @@
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
+			<artifactId>cucumber-junit-platform-engine</artifactId>
+			<version>7.33.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

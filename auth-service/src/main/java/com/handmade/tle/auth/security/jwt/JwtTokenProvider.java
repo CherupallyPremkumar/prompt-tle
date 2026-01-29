@@ -4,38 +4,37 @@ import com.handmade.tle.auth.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 
 @Slf4j
-@Component
+
 public class JwtTokenProvider {
 
     private final SecretKey secretKey;
+    private final long accessTokenExpiration;
+    private final long refreshTokenExpiration;
 
-    @Value("${app.jwt.access-token-expiration}")
-    private long accessTokenExpiration;
-
-    @Value("${app.jwt.refresh-token-expiration}")
-    private long refreshTokenExpiration;
-
-    public JwtTokenProvider(@Value("${app.jwt.secret}") String secret) {
+    public JwtTokenProvider(String secret, long accessTokenExpiration, long refreshTokenExpiration) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
     public String generateAccessToken(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        List<String> roles = (authorities == null) ? Collections.emptyList()
+                : authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList());
         return generateAccessToken(userDetails.getId(), roles);
     }
 
