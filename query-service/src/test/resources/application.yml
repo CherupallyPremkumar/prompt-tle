@@ -9,35 +9,44 @@ logging:
 chenile:
   base:
     url: http://localhost:8000
+  security:
+    admin:
+      emails: admin@example.com,test@example.com
 
 spring:
   banner:
     location: classpath:banner.txt
-  devtools:
-    restart:
+  sql:
+    init:
+      mode: always
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: 'true'
+        dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password 
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  h2:
+    console:
       enabled: true
-      additional-exclude: static/**,.h2.server.properties
-    livereload:
-      enabled: false # we use Webpack dev server + BrowserSync for livereload
-  ssl:
-    bundle:
-      jks:
-        kafka:
-          protocol: 'SSL'
-          keystore:
-            location: 'classpath:kafka/client.keystore.p12'
-            password: 'dummy-password'
-            type: PKCS12
-          truststore:
-            location: 'classpath:kafka/client.truststore.jks'
-            password: 'dummy-password'
-            type: JKS
+  
   kafka:
     bootstrap-servers: localhost:9092
     ssl:
-      bundle: kafka
-      keystore-content: ''
-      truststore-content: ''
+      keystore-content: dummy
+      truststore-content: dummy
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -45,43 +54,58 @@ spring:
       group-id: test-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: demo
-    password: password
-    hikari:
-      poolName: Hikari
-      auto-commit: false
-  h2:
-    console:
-      # disable spring boot built-in h2-console since we start it manually with correct configuration
-      enabled: true
-  liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
 
-  messages:
-    cache-duration: PT1S # 1 second, see the ISO 8601 standard
-  thymeleaf:
-    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            redirect-uri: http://localhost:8080/api/auth/callback/google
+            scope: openid,profile,email
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+app:
+  jwt:
+    secret: qMp3pMWv/4EdHXqH0KO5zmvRfilEeXwFvjSkkcRz2og=
+    access-token-expiration: 86400000
+    refresh-token-expiration: 2592000000
+  default-admin-email: admin@example.com
+  frontend:
+    success-url: http://localhost:3000/auth/success
+  oauth2:
+    authorized-redirect-uris: http://localhost:3000/auth/callback,http://localhost:8080/api/auth/callback/google
+
+oauth:
+  google:
+    client-id: test-client-id
+    client-secret: test-client-secret
+    redirect-uri: http://localhost:8080/api/auth/callback/google
+    token-uri: https://oauth2.googleapis.com/token
+    authorize-uri: https://accounts.google.com/o/oauth2/v2/auth
+
+google:
+  oauth2:
+    client-id: test-client-id
+    client-secret: test-client-secret
+    redirect-uri: http://localhost:8080/api/auth/callback/google
+
+cloud:
+  storage:
+    provider: s3
+    s3:
+      region: us-east-1
+      bucketName: test-bucket
+      access-key: test-access-key
+      secret-key: test-secret-key
 
 server:
   port: 8000
-  error:
-    whitelabel:
-      enabled: false
 
 query:
-  jpa:
-    hibernate:
-      show_sql: 'true'
-      ddl-auto: create
-    database-platform: org.hibernate.dialect.H2Dialect
-    properties:
-      hibernate:
-        format_sql: 'true'
-        dialect: org.hibernate.dialect.H2Dialect
   datasource:
     maximumPoolSize: '10'
     type: com.zaxxer.hikari.HikariDataSource

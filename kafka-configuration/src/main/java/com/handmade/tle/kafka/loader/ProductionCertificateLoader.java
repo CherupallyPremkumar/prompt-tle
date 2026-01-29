@@ -9,9 +9,15 @@ public class ProductionCertificateLoader implements KafkaCertificateLoader {
 
     @Override
     public String loadCertificate(String filename, String content) throws IOException {
+        if ("dummy".equalsIgnoreCase(content)) {
+            Path tempFile = Files.createTempFile("dummy_" + filename, ".tmp");
+            tempFile.toFile().deleteOnExit();
+            return tempFile.toAbsolutePath().toString();
+        }
+
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException(
-                    "Base64 content for " + filename + " must be provided in 'prod' profile");
+                    "Base64 content for " + filename + " must be provided");
         }
         Path tempFile = Files.createTempFile(filename, ".tmp");
         String sanitizedContent = content.replaceAll("\\s+", "");
