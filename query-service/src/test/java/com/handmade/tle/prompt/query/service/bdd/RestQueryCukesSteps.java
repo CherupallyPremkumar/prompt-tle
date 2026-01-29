@@ -1,6 +1,5 @@
 package com.handmade.tle.prompt.query.service.bdd;
 
-import com.handmade.tle.prompt.query.service.bdd.SpringTestConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
