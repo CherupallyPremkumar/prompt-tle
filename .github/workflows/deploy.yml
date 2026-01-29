@@ -57,7 +57,9 @@ jobs:
 
     # 3. Build Main Application
     - name: Build Application
-      run: mvn clean package -DskipTests -pl api-gateway -am
+      run: |
+        cd $GITHUB_WORKSPACE
+        mvn clean package -pl api-gateway -am
 
     # 4. Configure AWS & Push Image
     - name: Configure AWS credentials
