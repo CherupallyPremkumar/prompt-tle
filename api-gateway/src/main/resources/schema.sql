@@ -112,8 +112,8 @@ CREATE TABLE IF NOT EXISTS prompt (
     sla_red_date TIMESTAMP,
     sla_tending_late INT,
     sla_late INT,
-    flow_id VARCHAR(255), 
-    state_id VARCHAR(255),
+    flowId VARCHAR(255), 
+    stateId VARCHAR(255),
     -- Prompt fields
     slug VARCHAR(255) UNIQUE,
     is_featured BOOLEAN DEFAULT FALSE,

@@ -16,7 +16,6 @@
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>shared-library</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

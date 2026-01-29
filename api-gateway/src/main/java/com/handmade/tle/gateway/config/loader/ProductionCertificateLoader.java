@@ -19,7 +19,8 @@ public class ProductionCertificateLoader implements KafkaCertificateLoader {
                     "Base64 content for " + filename + " must be provided in 'prod' profile");
         }
         Path tempFile = Files.createTempFile(filename, ".tmp");
-        Files.write(tempFile, Base64.getDecoder().decode(content));
+        String sanitizedContent = content.replaceAll("\\s+", "");
+        Files.write(tempFile, Base64.getDecoder().decode(sanitizedContent));
         tempFile.toFile().deleteOnExit();
         return tempFile.toAbsolutePath().toString();
     }

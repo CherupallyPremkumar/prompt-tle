@@ -17,8 +17,16 @@ public class LocalCertificateLoader implements KafkaCertificateLoader {
 
     @Override
     public String loadCertificate(String filename, String content) throws IOException {
-        // In local/dev, we ignore the 'content' (Base64) and look for the file in
-        // classpath
+        // If content is provided (e.g. from env vars), use it even in local profile
+        if (content != null && !content.isBlank()) {
+            Path tempFile = Files.createTempFile(filename, ".tmp");
+            String sanitizedContent = content.replaceAll("\\s+", "");
+            Files.write(tempFile, java.util.Base64.getDecoder().decode(sanitizedContent));
+            tempFile.toFile().deleteOnExit();
+            return tempFile.toAbsolutePath().toString();
+        }
+
+        // Fallback: look for the file in classpath
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("kafka/" + filename)) {
             if (inputStream == null) {
                 // Return original local path if it exists for backward compat during dev
@@ -28,7 +36,8 @@ public class LocalCertificateLoader implements KafkaCertificateLoader {
                 if (localFile.exists()) {
                     return localFile.getAbsolutePath();
                 }
-                throw new FileNotFoundException("Certificate not found in classpath or filesystem: kafka/" + filename);
+                throw new FileNotFoundException(
+                        "Certificate not found in provided content, classpath, or filesystem: kafka/" + filename);
             }
             Path tempFile = Files.createTempFile(filename, ".tmp");
             Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);

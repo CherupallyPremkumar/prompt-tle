@@ -1,5 +1,6 @@
 package com.handmade.tle.upload.service;
 
+import com.google.common.base.Verify;
 import com.handmade.tle.quota.QuotaManagementService;
 import com.handmade.tle.shared.dto.*;
 import com.handmade.tle.shared.model.Upload;
@@ -123,15 +124,14 @@ public class UploadOrchestrationService {
             throw new RuntimeException("Unauthorized: This upload does not belong to you.");
         }
 
-        // 2. Verify file exists in storage
-        // boolean exists = storageProvider.fileExists(request.getFileKey());
-        // if (!exists) {
-        // log.error("❌ File not found in storage: {}", request.getFileKey());
-        // upload.setStatus(UploadStatus.FAILED);
-        // uploadRepository.save(upload);
-        // throw new RuntimeException("File not found in storage. Please upload the file
-        // before confirming.");
-        // }
+         //2. Verify file exists in storage
+         boolean exists = storageProvider.fileExists(request.getFileKey());
+         if (!exists) {
+         log.error("❌ File not found in storage: {}", request.getFileKey());
+         upload.setStatus(UploadStatus.FAILED);
+         uploadRepository.save(upload);
+         throw new RuntimeException("File not found in storage. Please upload the file before confirming.");
+         }
 
         // 3. Update upload status
         upload.setStatus(UploadStatus.COMPLETED);

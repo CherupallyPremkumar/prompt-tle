@@ -19,7 +19,7 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout
+    - name: Checkout Main App
       uses: actions/checkout@v3
 
     - name: Set up JDK 17
@@ -29,6 +29,37 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
+    # 1. Build & Install Chenile Core (Public Repo)
+    - name: Checkout Chenile Core
+      uses: actions/checkout@v3
+      with:
+        repository: CherupallyPremkumar/chenile-corefork
+        path: chenile-core
+        ref: main
+
+    - name: Install Chenile Core
+      run: |
+        cd chenile-core
+        mvn clean install -DskipTests
+
+    # 2. Build & Install Chenile Query Blueprints (Public Repo)
+    - name: Checkout Chenile Query Blueprints
+      uses: actions/checkout@v3
+      with:
+        repository: CherupallyPremkumar/chenile-query-workflow-blueprints
+        path: chenile-query
+        ref: main
+
+    - name: Install Chenile Query Blueprints
+      run: |
+        cd chenile-query
+        mvn clean install -DskipTests
+
+    # 3. Build Main Application
+    - name: Build Application
+      run: mvn clean package -DskipTests -pl api-gateway -am
+
+    # 4. Configure AWS & Push Image
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -46,9 +77,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Build a docker container and
-        # push it to ECR so that it can
-        # be deployed to ECS.
+        # Build docker image using the JAR we just built
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT

@@ -24,7 +24,6 @@
 	</parent>
 
 	<properties>
-		<prompt.version>${revision}</prompt.version>
 		<revision>0.0.1-SNAPSHOT</revision>
 		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
@@ -37,28 +36,76 @@
 
 	<dependencyManagement>
 	<dependencies>
+		<!-- Internal Modules -->
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
+			<artifactId>shared-library</artifactId>
 			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>api-gateway</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>auth-service</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>storage-service-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>storage-service-infra</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>quota-service-api</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>quota-service-impl</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>upload-service</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
 			<artifactId>prompt-service</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.handmade.tle</groupId>
 			<version>${revision}</version>
-			<artifactId>prompt-query-service</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
+			<artifactId>query-service</artifactId>
 			<version>${revision}</version>
-			<artifactId>prompt-domain</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>notification-service</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>analytics-service</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		
+		<!-- External Dependencies -->
 		<!-- AWS SDK v2 -->
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
-			<version>2.23.9</version>
+			<version>2.29.0</version>
 		</dependency>
+
 		<!-- Google Cloud Storage -->
 		<dependency>
 			<groupId>com.google.cloud</groupId>

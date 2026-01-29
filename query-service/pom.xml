@@ -18,7 +18,6 @@
 	<description>Query Service Test Cases for prompt </description>
 
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
 	</properties>
 
 	<dependencies>	
@@ -30,7 +29,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -47,21 +45,21 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>upload-service</artifactId>
-			<version>${revision}</version>
-			<scope>test</scope>
 		</dependency>
         <dependency>
             <groupId>com.handmade.tle</groupId>
             <artifactId>auth-service</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
         </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
     		<groupId>com.h2database</groupId>
@@ -71,19 +69,16 @@
 		<dependency>
     		<groupId>org.chenile</groupId>
     		<artifactId>chenile-query-controller</artifactId>
-    		<scope>test</scope>
 		</dependency>
 		<dependency>
     		<groupId>org.chenile</groupId>
     		<artifactId>chenile-query-service</artifactId>
-    		<scope>test</scope>
 		</dependency>
 
 		
 		<dependency>
 			<groupId>org.chenile</groupId>
 			<artifactId>cucumber-utils</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
@@ -99,8 +94,6 @@
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>prompt-service</artifactId>
-			<version>${revision}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

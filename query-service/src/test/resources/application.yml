@@ -3,6 +3,8 @@ logging:
     ROOT: INFO
     org.hibernate.SQL: INFO
     org.chenile.*: DEBUG
+    org.mybatis: DEBUG
+    prompt: DEBUG
 
 chenile:
   base:

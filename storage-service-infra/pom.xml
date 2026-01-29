@@ -16,12 +16,10 @@
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>storage-service-api</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>shared-library</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<!-- AWS SDK v2 -->
 		<dependency>

@@ -14,7 +14,7 @@ Feature: Tests the Security of Prompt Query Service
     Then the http status code is 302
 
   Scenario: Authorized access to prompt search should succeed
-    Given I am logged in as "google-user" with role "ROLE_USER"
+    Given I am logged in as "user-alice" with role "ROLE_USER"
     When I POST a REST request to URL "/q/prompt.search" with payload
     """json
     {
