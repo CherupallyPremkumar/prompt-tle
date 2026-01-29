@@ -29,42 +29,34 @@
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>upload-service</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>prompt-service</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>auth-service</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>storage-service-infra</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>quota-service-impl</artifactId>
-			<version>${revision}</version>
 		</dependency>
         <dependency>
             <groupId>com.handmade.tle</groupId>
             <artifactId>query-service</artifactId>
-            <version>${revision}</version>
         </dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>notification-service</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>analytics-service</artifactId>
-			<version>${revision}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

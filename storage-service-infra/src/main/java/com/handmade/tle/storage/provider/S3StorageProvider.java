@@ -25,7 +25,6 @@ import java.util.Map;
  * AWS S3 Storage Provider Implementation
  */
 @Slf4j
-@Service
 @ConditionalOnProperty(name = "cloud.storage.provider", havingValue = "s3")
 public class S3StorageProvider implements StorageProvider {
 
