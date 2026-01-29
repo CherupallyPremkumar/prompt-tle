@@ -2,22 +2,22 @@ package com.handmade.tle.quota;
 
 import com.handmade.tle.quota.dto.QuotaCheckRequest;
 import com.handmade.tle.quota.dto.QuotaResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 /**
  * Quota Management Service
- * Orchestrates quota operations and provides a clean entry point for other modules.
+ * Orchestrates quota operations and provides a clean entry point for other
+ * modules.
  */
 @Slf4j
-@Service
-@RequiredArgsConstructor
 public class QuotaManagementService {
 
     private final QuotaProvider quotaProvider;
+
+    public QuotaManagementService(QuotaProvider quotaProvider) {
+        this.quotaProvider = quotaProvider;
+    }
 
     public QuotaResponse checkStorageQuota(String userId, Long fileSize) {
         log.debug("Checking storage quota for user: {} ({} bytes)", userId, fileSize);

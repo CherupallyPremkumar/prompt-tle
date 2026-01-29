@@ -19,6 +19,10 @@
 			<groupId>com.handmade.tle</groupId>
 			<artifactId>shared-library</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.handmade.tle</groupId>
+			<artifactId>kafka-configuration</artifactId>
+		</dependency>
         <dependency>
             <groupId>com.handmade.tle</groupId>
             <artifactId>auth-service</artifactId>

@@ -59,8 +59,10 @@ security:
   session:
     stateless: false
 
+
 cloud:
   storage:
+    provider: s3
     s3:
       region: us-east-1
       bucketName: test-bucket

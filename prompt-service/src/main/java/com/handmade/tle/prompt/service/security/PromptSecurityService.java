@@ -5,18 +5,16 @@ import org.chenile.security.service.SecurityService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Arrays;
 
-@Service
 public class PromptSecurityService implements SecurityService {
 
     @Override
     public String[] getCurrentAuthorities() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getAuthorities() == null) {
+        if (authentication == null) {
             return new String[0];
         }
         return authentication.getAuthorities().stream()
@@ -53,7 +51,7 @@ public class PromptSecurityService implements SecurityService {
         // Let's assume ANY match is sufficient for access (OR logic).
         for (String acl : acls) {
             for (GrantedAuthority authority : authorities) {
-                if (authority.getAuthority().equals(acl)) {
+                if (acl.equals(authority.getAuthority())) {
                     return true;
                 }
             }

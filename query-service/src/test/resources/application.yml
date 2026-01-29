@@ -19,9 +19,32 @@ spring:
       additional-exclude: static/**,.h2.server.properties
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
-  jackson:
-    serialization:
-      indent-output: true
+  ssl:
+    bundle:
+      jks:
+        kafka:
+          protocol: 'SSL'
+          keystore:
+            location: 'classpath:kafka/client.keystore.p12'
+            password: 'dummy-password'
+            type: PKCS12
+          truststore:
+            location: 'classpath:kafka/client.truststore.jks'
+            password: 'dummy-password'
+            type: JKS
+  kafka:
+    bootstrap-servers: localhost:9092
+    ssl:
+      bundle: kafka
+      keystore-content: ''
+      truststore-content: ''
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: test-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -69,6 +92,3 @@ query:
     jdbcUrl: jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
   mapperFiles: classpath*:com/handmade/tle/query/service/mapper/*.xml
   definitionFiles: classpath*:com/handmade/tle/query/service/mapper/*.json
-
-
-

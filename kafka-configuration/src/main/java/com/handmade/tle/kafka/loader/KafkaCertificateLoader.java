@@ -1,4 +1,4 @@
-package com.handmade.tle.gateway.config.loader;
+package com.handmade.tle.kafka.loader;
 
 import java.io.IOException;
 

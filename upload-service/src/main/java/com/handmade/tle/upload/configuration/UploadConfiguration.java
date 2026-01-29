@@ -1,14 +1,50 @@
 package com.handmade.tle.upload.configuration;
 
+import com.handmade.tle.shared.repository.UploadRepository;
 import com.handmade.tle.storage.StorageProvider;
-import com.handmade.tle.storage.provider.S3StorageProvider;
+import com.handmade.tle.upload.event.UploadEventPublisher;
+import com.handmade.tle.upload.service.UploadOrchestrationService;
+import com.handmade.tle.upload.service.ValidationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.core.KafkaTemplate;
+
+import java.util.List;
 
 @Configuration
-class UploadConfiguration {
-    public static final String UPLOAD_DIR = "uploads/";
-    public static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-    public static final String[] ALLOWED_FILE_TYPES = {"image/jpeg", "image/png", "application/pdf"};
+public class UploadConfiguration {
 
+    @Value("${upload.max-file-size:10485760}")
+    private long maxFileSize;
+
+    @Value("${upload.allowed-types:image/jpeg,image/png,application/pdf}")
+    private List<String> allowedFileTypes;
+
+    @Value("${upload.presigned-expiration-seconds:3600}")
+    private int presignedExpirationSeconds;
+
+    @Bean
+    public ValidationService uploadValidationService() {
+        return new ValidationService(maxFileSize, allowedFileTypes);
+    }
+
+    @Bean
+    public UploadEventPublisher uploadEventPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
+        return new UploadEventPublisher(kafkaTemplate);
+    }
+
+    @Bean
+    public UploadOrchestrationService uploadOrchestrationService(
+            StorageProvider storageProvider,
+            UploadRepository uploadRepository,
+            UploadEventPublisher uploadEventPublisher,
+            ValidationService validationService) {
+        return new UploadOrchestrationService(
+                storageProvider,
+                uploadRepository,
+                uploadEventPublisher,
+                validationService,
+                presignedExpirationSeconds);
+    }
 }

@@ -6,12 +6,8 @@ import com.handmade.tle.prompt.service.security.PromptSecurityService;
 import org.chenile.security.service.SecurityService;
 import org.chenile.stm.*;
 import org.chenile.stm.action.STMTransitionAction;
-import org.chenile.stm.ConfigProvider;
-import org.chenile.stm.impl.ConfigProviderImpl;
 import org.chenile.stm.impl.*;
 import org.chenile.stm.spring.SpringBeanFactoryAdapter;
-import org.chenile.workflow.param.MinimalPayload;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +19,14 @@ import com.handmade.tle.shared.model.Prompt;
 import com.handmade.tle.prompt.service.cmds.*;
 import com.handmade.tle.prompt.service.healthcheck.PromptHealthChecker;
 import com.handmade.tle.prompt.service.store.PromptEntityStore;
+import com.handmade.tle.shared.repository.PromptRepository;
 import org.chenile.workflow.api.WorkflowRegistry;
-import org.chenile.stm.State;
 import org.chenile.workflow.service.activities.ActivityChecker;
 import org.chenile.workflow.service.activities.AreActivitiesComplete;
 
 @Configuration
 public class PromptConfiguration {
-    private static final String FLOW_DEFINITION_FILE = "com/upload/prompt/prompt-states.xml";
+    private static final String FLOW_DEFINITION_FILE = "com/handmade/tle/prompt/prompt-states.xml";
     public static final String PREFIX_FOR_PROPERTIES = "Prompt";
     public static final String PREFIX_FOR_RESOLVER = "prompt";
 
@@ -42,7 +38,7 @@ public class PromptConfiguration {
     @Bean
     STMFlowStoreImpl promptFlowStore(
             @Qualifier("promptBeanFactoryAdapter") BeanFactoryAdapter promptBeanFactoryAdapter,
-            @Qualifier("promptEnablementStrategy") EnablementStrategy enablementStrategy) throws Exception {
+            @Qualifier("promptEnablementStrategy") EnablementStrategy enablementStrategy) {
         STMFlowStoreImpl stmFlowStore = new STMFlowStoreImpl();
         stmFlowStore.setBeanFactory(promptBeanFactoryAdapter);
         stmFlowStore.setEnablementStrategy(enablementStrategy);
@@ -50,23 +46,22 @@ public class PromptConfiguration {
     }
 
     @Bean
-    STM<Prompt> promptEntityStm(@Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore) throws Exception {
+    STM<Prompt> promptEntityStm(@Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore) {
         STMImpl<Prompt> stm = new STMImpl<>();
         stm.setStmFlowStore(stmFlowStore);
         return stm;
     }
 
     @Bean
-    STMActionsInfoProvider promptActionsInfoProvider(@Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore,
-            @Qualifier("promptFlowReader") XmlFlowReader flowReader) {
+    STMActionsInfoProvider promptActionsInfoProvider(@Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore) {
         STMActionsInfoProvider provider = new STMActionsInfoProvider(stmFlowStore);
         WorkflowRegistry.addSTMActionsInfoProvider("prompt", provider);
         return provider;
     }
 
     @Bean
-    EntityStore<Prompt> promptEntityStore() {
-        return new PromptEntityStore();
+    EntityStore<Prompt> promptEntityStore(PromptRepository promptRepository) {
+        return new PromptEntityStore(promptRepository);
     }
 
     @Bean
@@ -81,14 +76,14 @@ public class PromptConfiguration {
     GenericEntryAction<Prompt> promptEntryAction(@Qualifier("promptEntityStore") EntityStore<Prompt> entityStore,
             @Qualifier("promptActionsInfoProvider") STMActionsInfoProvider promptInfoProvider,
             @Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore) {
-        GenericEntryAction<Prompt> entryAction = new GenericEntryAction<Prompt>(entityStore, promptInfoProvider);
+        GenericEntryAction<Prompt> entryAction = new GenericEntryAction<>(entityStore, promptInfoProvider);
         stmFlowStore.setEntryAction(entryAction);
         return entryAction;
     }
 
     @Bean
     GenericExitAction<Prompt> promptExitAction(@Qualifier("promptFlowStore") STMFlowStoreImpl stmFlowStore) {
-        GenericExitAction<Prompt> exitAction = new GenericExitAction<Prompt>();
+        GenericExitAction<Prompt> exitAction = new GenericExitAction<>();
         stmFlowStore.setExitAction(exitAction);
         return exitAction;
     }
@@ -116,7 +111,7 @@ public class PromptConfiguration {
 
     @Bean
     STMTransitionAction<Prompt> defaultpromptSTMTransitionAction() {
-        return new DefaultSTMTransitionAction<MinimalPayload>();
+        return new DefaultSTMTransitionAction<>();
     }
 
     @Bean

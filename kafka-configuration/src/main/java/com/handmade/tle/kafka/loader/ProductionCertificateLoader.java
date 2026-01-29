@@ -1,15 +1,10 @@
-package com.handmade.tle.gateway.config.loader;
-
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+package com.handmade.tle.kafka.loader;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 
-@Component
-@Profile("prod")
 public class ProductionCertificateLoader implements KafkaCertificateLoader {
 
     @Override

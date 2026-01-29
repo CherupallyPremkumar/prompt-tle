@@ -20,8 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
-@Service
-@RequiredArgsConstructor
+@lombok.RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;

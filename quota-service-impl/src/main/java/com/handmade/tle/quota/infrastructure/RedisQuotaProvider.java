@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,34 +15,39 @@ import java.util.concurrent.TimeUnit;
  * Redis implementation of QuotaProvider
  * Uses Redis atomic operations for high-performance usage tracking.
  */
-@Service
-@RequiredArgsConstructor
+
 public class RedisQuotaProvider implements QuotaProvider {
 
     private static final Logger log = LoggerFactory.getLogger(RedisQuotaProvider.class);
 
+    private final Long defaultQuotaLimit;
+    private final int reservationTtlMinutes;
+
     private final StringRedisTemplate redisTemplate;
-
-    @Value("${quota.default-limit:104857600}") // 100MB Default
-    private Long defaultQuotaLimit;
-
-    @Value("${quota.reservation-ttl-minutes:30}")
-    private int reservationTtlMinutes;
 
     private static final String USAGE_KEY_PREFIX = "quota:usage:";
     private static final String RESERVATION_KEY_PREFIX = "quota:resv:";
+
+    public RedisQuotaProvider(
+            StringRedisTemplate redisTemplate,
+            @Value("${quota.default-limit:104857600}") Long defaultQuotaLimit,
+            @Value("${quota.reservation-ttl-minutes:30}") int reservationTtlMinutes) {
+        this.redisTemplate = redisTemplate;
+        this.defaultQuotaLimit = defaultQuotaLimit;
+        this.reservationTtlMinutes = reservationTtlMinutes;
+    }
 
     @Override
     public QuotaResponse checkQuota(QuotaCheckRequest request) {
         String usageKey = USAGE_KEY_PREFIX + request.getUserId();
         String usageStr = redisTemplate.opsForValue().get(usageKey);
         long currentUsage = (usageStr != null) ? Long.parseLong(usageStr) : 0L;
-        
+
         long totalPending = getPendingReservations(request.getUserId());
         long anticipatedUsage = currentUsage + totalPending + request.getAmount();
 
         if (anticipatedUsage > defaultQuotaLimit) {
-            log.warn("Quota denied for user: {}. Usage: {}, Pending: {}, Requested: {}, Limit: {}", 
+            log.warn("Quota denied for user: {}. Usage: {}, Pending: {}, Requested: {}, Limit: {}",
                     request.getUserId(), currentUsage, totalPending, request.getAmount(), defaultQuotaLimit);
             return QuotaResponse.deny("Storage quota exceeded. Please upgrade your plan.");
         }
@@ -62,7 +66,7 @@ public class RedisQuotaProvider implements QuotaProvider {
     public void confirmQuota(String userId, String operationId) {
         String resvKey = RESERVATION_KEY_PREFIX + userId + ":" + operationId;
         String resvStr = redisTemplate.opsForValue().get(resvKey);
-        
+
         if (resvStr != null) {
             long amount = Long.parseLong(resvStr);
             incrementUsage(userId, amount);

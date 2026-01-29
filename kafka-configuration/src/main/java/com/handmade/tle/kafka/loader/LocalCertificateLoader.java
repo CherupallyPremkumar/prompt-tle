@@ -1,7 +1,4 @@
-package com.handmade.tle.gateway.config.loader;
-
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+package com.handmade.tle.kafka.loader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,9 +7,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 
-@Component
-@Profile("!prod")
 public class LocalCertificateLoader implements KafkaCertificateLoader {
 
     @Override
@@ -21,7 +17,7 @@ public class LocalCertificateLoader implements KafkaCertificateLoader {
         if (content != null && !content.isBlank()) {
             Path tempFile = Files.createTempFile(filename, ".tmp");
             String sanitizedContent = content.replaceAll("\\s+", "");
-            Files.write(tempFile, java.util.Base64.getDecoder().decode(sanitizedContent));
+            Files.write(tempFile, Base64.getDecoder().decode(sanitizedContent));
             tempFile.toFile().deleteOnExit();
             return tempFile.toAbsolutePath().toString();
         }

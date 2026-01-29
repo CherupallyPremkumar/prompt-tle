@@ -23,7 +23,7 @@ spring:
       truststore-content: ${KAFKA_TRUSTSTORE_CONTENT_BASE64}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       group-id: api-gateway-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
