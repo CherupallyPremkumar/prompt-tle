@@ -50,12 +50,6 @@ spring:
       routes:
         - id: auth-service
           uri: lb://auth-service
-          predicates:
-            - Path=/api/auth/**
-        - id: prompt-service
-          uri: lb://prompt-service
-          predicates:
-            - Path=/api/prompts/**
   security:
     oauth2:
       client:
@@ -85,6 +79,7 @@ app:
 
 cloud:
   storage:
+    provider: s3
     s3:
       bucketName: ${BUCKET_NAME}
       region: ${REGION}
