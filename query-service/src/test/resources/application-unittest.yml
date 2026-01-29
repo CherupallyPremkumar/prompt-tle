@@ -4,6 +4,10 @@ spring:
       mode: always
   liquibase:
     enabled: false
+  kafka:
+    ssl:
+      keystore-content: dummy
+      truststore-content: dummy
   jpa:
     hibernate:
       ddl-auto: none
