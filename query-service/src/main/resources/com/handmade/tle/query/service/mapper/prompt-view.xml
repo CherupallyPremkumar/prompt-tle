@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="prompt">
+
+    <resultMap id="promptViewResult" type="map">
+        <result property="id" column="id"/>
+        <result property="slug" column="slug"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="template" column="template"/>
+        <result property="body" column="body"/>
+        <result property="systemPrompt" column="system_prompt"/>
+        <result property="taskType" column="task_type"/>
+        <result property="stateId" column="state_id"/>
+        <result property="flowId" column="flow_id"/>
+        <result property="validationScore" column="validation_score"/>
+        <result property="lastValidatedAt" column="last_validated_at"/>
+        <result property="semanticVersion" column="semantic_version"/>
+        <result property="parentVersionId" column="parent_version_id"/>
+        <result property="changelog" column="changelog"/>
+        <result property="recommendedModel" column="recommended_model"/>
+        <result property="userId" column="user_id"/>
+        <result property="authorUsername" column="author_username"/>
+        <result property="usageCount" column="usage_count"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="score" column="score"/>
+        <result property="acceptedAnswerId" column="accepted_answer_id"/>
+        <result property="answerCount" column="answer_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="duplicateOfPromptId" column="duplicate_of_prompt_id"/>
+        <result property="closeReason" column="close_reason"/>
+        <result property="closedAt" column="closed_at"/>
+        <result property="closedByUserId" column="closed_by_user_id"/>
+        <result property="revisionNumber" column="revision_number"/>
+        <result property="isFeatured" column="is_featured"/>
+        <result property="forkedFromPromptId" column="forked_from_prompt_id"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="creatorRole" column="creator_role"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="lastModifiedTime" column="last_modified_time"/>
+        <result property="lastModifiedBy" column="last_modified_by"/>
+        <result property="tenant" column="tenant"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="version" column="version"/>
+        <result property="tags" column="tags_str"/>
+        <result property="authorFullName" column="author_full_name"/>
+        <result property="authorPictureUrl" column="author_picture_url"/>
+        <collection property="comments" ofType="map" javaType="list">
+             <result property="id" column="comment_id"/>
+             <result property="content" column="comment_content"/>
+             <result property="author" column="comment_author"/>
+             <result property="createdAt" column="comment_created_at"/>
+             <result property="authorPictureUrl" column="comment_author_picture_url"/>
+        </collection>
+    </resultMap>
+
+    <select id="view-count" resultType="int">
+        SELECT COUNT(DISTINCT p.id)
+        FROM prompt p
+        LEFT JOIN users u ON p.user_id = u.id
+        <where>
+            <if test="id != null">
+                AND p.id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="view" resultMap="promptViewResult">
+        SELECT p.*,
+               c.id as comment_id, c.content as comment_content, c.author as comment_author, c.created_at as comment_created_at,
+               cu.picture_url as comment_author_picture_url,
+               STRING_AGG(t.tags, ',') as tags_str,
+               u.full_name as author_full_name, u.picture_url as author_picture_url
+        FROM prompt p
+        LEFT JOIN users u ON p.user_id = u.id
+        LEFT JOIN prompt_tags t ON p.id = t.prompt_id
+        LEFT JOIN comment c ON p.id = c.prompt_id
+        LEFT JOIN users cu ON c.author = cu.username
+        <where>
+            <if test="id != null">
+                AND p.id = #{id}
+            </if>
+        </where>
+        GROUP BY p.id, u.id, c.id, cu.id
+    </select>
+
+</mapper>

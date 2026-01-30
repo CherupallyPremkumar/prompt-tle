@@ -1,0 +1,51 @@
+[
+    {
+        "id": "user.searchUsers",
+        "name": "user.searchUsers",
+        "columnMetadata": {
+            "id": {
+                "name": "id",
+                "filterable": true,
+                "sortable": true
+            },
+            "username": {
+                "name": "username",
+                "filterable": true,
+                "sortable": true,
+                "likeQuery": true
+            },
+            "fullName": {
+                "name": "fullName",
+                "columnName": "full_name",
+                "filterable": true,
+                "sortable": true,
+                "likeQuery": true
+            },
+            "email": {
+                "name": "email",
+                "filterable": true,
+                "sortable": true
+            },
+            "pictureUrl": {
+                "name": "pictureUrl",
+                "columnName": "picture_url"
+            },
+            "bio": {
+                "name": "bio"
+            },
+            "reputation": {
+                "name": "reputation",
+                "columnName": "total_reputation",
+                "sortable": true
+            },
+            "createdTime": {
+                "name": "createdTime",
+                "columnName": "created_time",
+                "sortable": true
+            }
+        },
+        "paginated": true,
+        "sortable": true,
+        "acls": []
+    }
+]

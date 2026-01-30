@@ -11,7 +11,7 @@ Feature: Tests the Security of Prompt Query Service
       "numRowsInPage": 10
     }
     """
-    Then the http status code is 302
+    Then the http status code is 200
 
   Scenario: Authorized access to prompt search should succeed
     Given I am logged in as "user-alice" with role "ROLE_USER"

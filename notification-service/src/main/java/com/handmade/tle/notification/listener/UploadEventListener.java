@@ -11,7 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 @Slf4j
 public class UploadEventListener {
 
-    @KafkaListener(topics = "upload-completed", groupId = "notification-group")
+    @KafkaListener(topics = "upload-completed", groupId = "notification-group", containerFactory = "uploadEventKafkaListenerFactory")
     public void handleUploadCompleted(UploadEvent event) {
         log.info("📧 Notification Service: Received upload completed event for file: {}", event.getFilename());
         log.info("Sending confirmation email to user: {} for upload: {}", event.getUserId(), event.getUploadId());
