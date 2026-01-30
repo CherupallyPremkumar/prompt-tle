@@ -8,6 +8,7 @@ import com.handmade.tle.shared.model.Acl;
 import com.handmade.tle.shared.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,10 +38,10 @@ public class AuthController {
         if (user == null) {
             return ResponseEntity.status(401).body(ApiResponse.error("Invalid credentials", "AUTH_001"));
         }
-        
+
         List<String> authorities = getAuthorities(user);
         String token = tokenProvider.generateAccessToken(user.getId(), authorities);
-        
+
         return ResponseEntity.ok(ApiResponse.success(AuthResponse.builder()
                 .accessToken(token)
                 .username(user.getUsername())
@@ -95,5 +96,39 @@ public class AuthController {
             }
         }
         return new ArrayList<>(authorities);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<AuthResponse>> getCurrentUser(HttpServletRequest request) {
+        String token = com.handmade.tle.auth.security.util.CookieUtils.getCookie(request, "access_token")
+                .map(Cookie::getValue)
+                .orElse(null);
+
+        if (token == null || !tokenProvider.validateToken(token)) {
+            return ResponseEntity.status(401).body(ApiResponse.error("Unauthenticated", "AUTH_005"));
+        }
+
+        String userId = tokenProvider.getUserIdFromToken(token);
+        User user = userRepository.findByIdWithRoles(userId).orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(404).body(ApiResponse.error("User not found", "AUTH_004"));
+        }
+
+        List<String> authorities = getAuthorities(user);
+
+        return ResponseEntity.ok(ApiResponse.success(AuthResponse.builder()
+                .accessToken(null) // Do not return token in body, it's in the cookie
+                .username(user.getUsername())
+                .roles(authorities)
+                .build()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {
+        log.info("Logout request received");
+        com.handmade.tle.auth.security.util.CookieUtils.deleteCookie(request, response, "access_token");
+        com.handmade.tle.auth.security.util.CookieUtils.deleteCookie(request, response, "refresh_token");
+        return ResponseEntity.ok(ApiResponse.success("Logged out successfully"));
     }
 }

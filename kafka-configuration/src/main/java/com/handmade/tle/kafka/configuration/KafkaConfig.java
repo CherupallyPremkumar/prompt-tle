@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.annotation.EnableKafka;
+import com.handmade.tle.shared.dto.UploadEvent;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 
@@ -119,6 +120,38 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        return factory;
+    }
+
+    @Bean
+    public ConsumerFactory<String, UploadEvent> uploadEventConsumerFactory() {
+        ensureCertificatesLoaded();
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId); // Default group, listeners can override
+
+        configureSsl(props);
+
+        JacksonJsonDeserializer<UploadEvent> deserializer = new JacksonJsonDeserializer<>(UploadEvent.class);
+        deserializer.addTrustedPackages("com.handmade.tle.shared.dto");
+        deserializer.setUseTypeHeaders(false);
+
+        ErrorHandlingDeserializer<UploadEvent> errorHandlingDeserializer =
+                new ErrorHandlingDeserializer<>(deserializer);
+
+        return new DefaultKafkaConsumerFactory<>(
+                props,
+                new StringDeserializer(),
+                errorHandlingDeserializer
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, UploadEvent> uploadEventKafkaListenerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, UploadEvent> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(uploadEventConsumerFactory());
         return factory;
     }
 

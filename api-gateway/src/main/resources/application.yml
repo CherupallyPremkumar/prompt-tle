@@ -1,6 +1,11 @@
 server:
   port: 8080
 
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.handmade.tle: DEBUG
+
 spring:
   ssl:
     bundle:
@@ -41,15 +46,37 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate.format_sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      continue-on-error: true
   cloud:
     gateway:
       routes:
         - id: auth-service
           uri: lb://auth-service
+          predicates:
+             - Path=/api/auth/**
+        - id: prompt-service
+          uri: lb://prompt-service
+          predicates:
+            - Path=/api/prompt/**
+          filters:
+            - StripPrefix=1
+        - id: upload-service
+          uri: lb://upload-service
+          predicates:
+            - Path=/api/uploads/**
+        - id: quota-service
+          uri: lb://quota-service
+          predicates:
+            - Path=/api/quota/**
   security:
     oauth2:
       client:
@@ -69,6 +96,8 @@ spring:
             jwk-set-uri: ${GOOGLE_JWK_SET_URI}
 
 app:
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
   jwt:
     secret: ${JWT_SECRET}
     access-token-expiration: 3600000 # 1 hour in ms

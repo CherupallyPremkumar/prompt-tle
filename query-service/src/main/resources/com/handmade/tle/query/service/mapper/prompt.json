@@ -172,7 +172,9 @@
 		"workflowName": "prompt",
 		"stateColumn": "stateId",
 		"flowColumn": "flowId",
-		"acls": []
+		"acls": [
+			"acl-read-prompt"
+		]
 	},
 	{
 		"id": "prompt.getBySlug",

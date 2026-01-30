@@ -11,7 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 @Slf4j
 public class UploadEventListener {
 
-    @KafkaListener(topics = "upload-completed", groupId = "analytics-group")
+    @KafkaListener(topics = "upload-completed", groupId = "analytics-group", containerFactory = "uploadEventKafkaListenerFactory")
     public void handleUploadCompleted(UploadEvent event) {
         log.info("📊 Analytics Service: Received upload completed event for upload: {}", event.getUploadId());
         log.info("Recording metrics for user: {} | File: {} | Size: {} bytes",

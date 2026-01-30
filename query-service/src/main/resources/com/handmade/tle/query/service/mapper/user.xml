@@ -4,124 +4,57 @@
 
     <resultMap id="userResult" type="map">
         <result property="id" column="id"/>
-        <result property="email" column="email"/>
-        <result property="googleSub" column="google_sub"/>
-        <result property="fullName" column="full_name"/>
         <result property="username" column="username"/>
-        <result property="bio" column="bio"/>
-        <result property="pictureUrl" column="picture_url"/>
-        <result property="emailVerified" column="email_verified"/>
-        <result property="status" column="status"/>
-        <result property="isActive" column="is_active"/>
-        <result property="lastLogin" column="last_login"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="version" column="version"/>
-    </resultMap>
-
-    <resultMap id="googleAccountResult" type="map">
-        <result property="id" column="id"/>
-        <result property="googleUserId" column="google_user_id"/>
-        <result property="userId" column="user_id"/>
+        <result property="fullName" column="full_name"/>
         <result property="email" column="email"/>
-        <result property="displayName" column="display_name"/>
-        <result property="picture" column="picture"/>
-        <result property="connectedAt" column="connected_at"/>
-        <result property="disconnectedAt" column="disconnected_at"/>
+        <result property="pictureUrl" column="picture_url"/>
+        <result property="bio" column="bio"/>
+        <result property="createdTime" column="created_time"/>
+        <association property="reputation" javaType="map">
+            <result property="totalReputation" column="total_reputation"/>
+        </association>
     </resultMap>
 
-    <resultMap id="sessionResult" type="map">
-        <result property="id" column="id"/>
-        <result property="userId" column="user_id"/>
-        <result property="ipAddress" column="ip_address"/>
-        <result property="userAgent" column="user_agent"/>
-        <result property="deviceType" column="device_type"/>
-        <result property="location" column="location"/>
-        <result property="isActive" column="is_active"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="lastActivityAt" column="last_activity_at"/>
-        <result property="expiresAt" column="expires_at"/>
-    </resultMap>
-
-    <!-- User Queries -->
     <select id="searchUsers-count" resultType="int">
-        SELECT COUNT(*) FROM users
+        SELECT COUNT(*)
+        FROM users u
         <where>
-            <if test="email != null">
-                AND email LIKE CONCAT('%', #{email}, '%')
-            </if>
             <if test="username != null">
-                AND username LIKE CONCAT('%', #{username}, '%')
+                AND u.username LIKE #{username}
             </if>
             <if test="fullName != null">
-                AND full_name LIKE CONCAT('%', #{fullName}, '%')
+                AND u.full_name LIKE #{fullName}
             </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-            <if test="isActive != null">
-                AND is_active = #{isActive}
+            <if test="tenant != null">
+                AND u.tenant = #{tenant}
             </if>
         </where>
     </select>
 
     <select id="searchUsers" resultMap="userResult">
-        SELECT * FROM users
+        SELECT u.*, r.total_reputation
+        FROM users u
+        LEFT JOIN user_reputation r ON u.id = r.user_id
         <where>
-            <if test="email != null">
-                AND email LIKE CONCAT('%', #{email}, '%')
-            </if>
             <if test="username != null">
-                AND username LIKE CONCAT('%', #{username}, '%')
+                AND u.username LIKE #{username}
             </if>
             <if test="fullName != null">
-                AND full_name LIKE CONCAT('%', #{fullName}, '%')
+                AND u.full_name LIKE #{fullName}
             </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-            <if test="isActive != null">
-                AND is_active = #{isActive}
+            <if test="tenant != null">
+                AND u.tenant = #{tenant}
             </if>
         </where>
-        ${orderby} ${pagination}
-    </select>
-
-    <select id="getUserById" resultMap="userResult">
-        SELECT * FROM users WHERE id = #{id}
-    </select>
-
-    <select id="getUserByEmail" resultMap="userResult">
-        SELECT * FROM users WHERE email = #{email}
-    </select>
-
-    <!-- Google Account Queries -->
-    <select id="getUserGoogleAccounts-count" resultType="int">
-        SELECT COUNT(*) FROM google_accounts WHERE user_id = #{userId}
-    </select>
-
-    <select id="getUserGoogleAccounts" resultMap="googleAccountResult">
-        SELECT * FROM google_accounts 
-        WHERE user_id = #{userId}
-        AND disconnected_at IS NULL
-        ${orderby} ${pagination}
-    </select>
-
-    <!-- Session Queries -->
-    <select id="getUserSessions-count" resultType="int">
-        SELECT COUNT(*) FROM sessions 
-        WHERE user_id = #{userId}
-        <if test="isActive != null">
-            AND is_active = #{isActive}
-        </if>
-    </select>
-
-    <select id="getUserSessions" resultMap="sessionResult">
-        SELECT * FROM sessions 
-        WHERE user_id = #{userId}
-        <if test="isActive != null">
-            AND is_active = #{isActive}
-        </if>
-        ${orderby} ${pagination}
+        <choose>
+            <when test="orderby != null and orderby.contains('order by 0')">
+                ORDER BY r.total_reputation DESC, u.created_time DESC
+            </when>
+            <otherwise>
+                ${orderby}
+            </otherwise>
+        </choose>
+        ${pagination}
     </select>
 
 </mapper>
